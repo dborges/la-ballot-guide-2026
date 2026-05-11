@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LA County Primary · June 2, 2026</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0c0f;--surface:#111117;--surface2:#17171f;
+  --border:#1e1e2a;--border2:#272736;
+  --text:#ddddf0;--muted:#8888a8;--dim:#4a4a68;
+  --accent:#e8a000;--accent-glow:rgba(232,160,0,0.07);
+  --sidebar:260px;--hh:0px;
+}
+body{background:var(--bg);color:var(--text);font-family:'Menlo','Monaco','Consolas','Courier New',monospace;font-size:12.5px;line-height:1.5;min-height:100vh}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.012) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;z-index:0}
+
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(12,12,15,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(8px);padding:10px 14px 0}
+.hdr-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
+.hdr-brand{display:flex;align-items:center;gap:10px}
+.seal{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;box-shadow:0 0 12px rgba(232,160,0,0.2)}
+.hdr h1{font-family:'Georgia','Times New Roman',serif;font-size:13px;font-weight:bold;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);line-height:1.2}
+.hdr-sub{font-size:10px;color:var(--muted);letter-spacing:0.06em;margin-top:1px}
+.hdr-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:4px;border:1px solid var(--border2);background:var(--surface);color:var(--muted);font-family:inherit;font-size:10px;cursor:pointer;transition:all 0.14s;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap}
+.btn:hover{background:var(--surface2);color:var(--text);border-color:var(--accent)}
+.btn-p{background:var(--accent);color:#000;border-color:var(--accent);font-weight:bold}
+.btn-p:hover{background:#ffb800;color:#000;border-color:#ffb800}
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.prog-bar{flex:1;height:2px;background:var(--border);border-radius:1px;overflow:hidden}
+.prog-fill{height:100%;width:0%;border-radius:1px;background:linear-gradient(90deg,var(--accent),#ffd55a);transition:width 0.35s ease}
+.prog-lbl{font-size:10px;color:var(--muted);white-space:nowrap;min-width:76px;text-align:right}
+.tabs{display:flex;gap:1px;overflow-x:auto;scrollbar-width:none;padding-bottom:1px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:5px 9px;border-radius:4px 4px 0 0;border:1px solid transparent;border-bottom:none;background:transparent;color:var(--dim);font-family:inherit;font-size:10px;cursor:pointer;transition:all 0.14s;letter-spacing:0.05em;position:relative;top:1px;white-space:nowrap}
+.tab:hover{color:var(--muted);background:var(--surface)}
+.tab.on{background:var(--surface);border-color:var(--border);border-bottom-color:var(--surface);color:var(--text)}
+.tdot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:4px;vertical-align:middle;position:relative;top:-1px}
+
+/* LAYOUT */
+.layout{display:flex;align-items:flex-start;position:relative;z-index:1}
+.main{flex:1;min-width:0;padding:14px;margin-right:var(--sidebar)}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin:22px 0 10px}
+.sec-hdr:first-child{margin-top:0}
+.sec-title{font-family:'Georgia','Times New Roman',serif;font-size:10px;font-weight:bold;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);white-space:nowrap}
+.sec-line{flex:1;height:1px;background:linear-gradient(90deg,var(--accent-glow) 0%,var(--border) 60%,transparent)}
+
+/* RACE CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:5px;margin-bottom:6px;overflow:hidden;transition:border-color 0.2s}
+.card.sel{border-color:var(--accent)}
+.card.hidden{display:none}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--surface2);border-bottom:1px solid var(--border);gap:8px}
+.card-left{display:flex;align-items:center;gap:7px;min-width:0}
+.jtag{flex-shrink:0;font-size:8px;letter-spacing:0.08em;text-transform:uppercase;padding:2px 5px;border-radius:2px;font-weight:bold}
+.j-state{background:rgba(232,160,0,0.15);color:var(--accent)}
+.j-city{background:rgba(96,165,250,0.15);color:#60a5fa}
+.j-county{background:rgba(74,222,128,0.15);color:#4ade80}
+.j-judicial{background:rgba(148,163,184,0.15);color:#94a3b8}
+.card-title{font-family:'Georgia','Times New Roman',serif;font-size:12px;font-weight:bold;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.c-count{font-size:10px;color:var(--dim)}
+.btn-clr{padding:2px 7px;font-size:9px;border-radius:3px;border:1px solid var(--border2);background:transparent;color:var(--dim);cursor:pointer;font-family:inherit;transition:all 0.14s;text-transform:uppercase;letter-spacing:0.05em}
+.btn-clr:hover{border-color:#ef4444;color:#ef4444}
+
+/* CANDIDATE WRAP + ROW */
+.cwrap{}
+.cwrap.dimmed{opacity:0.28;transition:opacity 0.2s}
+.cwrap.dimmed:hover{opacity:0.55}
+.clist{padding:2px 0}
+.crow{display:flex;align-items:center;gap:8px;padding:5px 10px;cursor:pointer;transition:background 0.1s;position:relative}
+.crow:hover{background:var(--surface2)}
+.crow.on{background:var(--accent-glow)}
+.crow.on::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent)}
+.radio{flex-shrink:0;width:13px;height:13px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;position:relative;transition:border-color 0.14s}
+.crow.on .radio{border-color:var(--accent)}
+.crow.on .radio::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.cname{flex:1;font-size:12px;font-weight:bold;color:var(--text);min-width:0}
+.cname-link{flex:1;font-size:12px;font-weight:bold;color:var(--text);min-width:0;cursor:pointer;transition:color 0.14s;display:inline-flex;align-items:center;gap:3px}
+.cname-link:hover{color:var(--accent)}
+.bio-chev{font-size:9px;display:inline-block;transition:transform 0.22s ease;color:var(--dim);flex-shrink:0;line-height:1}
+.pbadge{flex-shrink:0;font-size:9px;font-weight:bold;letter-spacing:0.06em;padding:1px 5px;border-radius:2px}
+.cdesc{font-size:10px;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:190px}
+.cflag{flex-shrink:0;font-size:9px;color:#f97316;font-weight:bold;white-space:nowrap}
+
+/* BIO DRAWER */
+.bio-drawer{max-height:0;overflow:hidden;transition:max-height 0.32s ease}
+.bio-drawer.open{max-height:500px}
+.bio-inner{padding:9px 12px 10px 31px;font-size:11px;line-height:1.7;color:var(--muted);background:rgba(232,160,0,0.04);border-top:1px solid var(--border);border-left:2px solid var(--accent)}
+
+.uncontested{font-size:10px;color:var(--dim);font-style:italic;padding:4px 10px 5px}
+.race-note{font-size:10px;color:var(--dim);font-style:italic;padding:3px 10px 5px;border-top:1px solid var(--border)}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--hh);right:0;width:var(--sidebar);height:calc(100vh - var(--hh));background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;z-index:50}
+.sb-hdr{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.sb-title{font-family:'Georgia','Times New Roman',serif;font-size:11px;font-weight:bold;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)}
+.sb-ct{font-size:10px;color:var(--muted)}
+.sb-scroll{flex:1;overflow-y:auto;padding:6px 0;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+.sb-empty{padding:20px 12px;text-align:center;color:var(--dim);font-size:10px;line-height:1.7}
+.sb-section{padding:8px 12px 2px;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);font-weight:bold}
+.sb-item{padding:5px 12px;display:flex;flex-direction:column;gap:1px;cursor:pointer;transition:background 0.1s}
+.sb-item:hover{background:var(--surface2)}
+.sb-office{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-name{font-size:11px;font-weight:bold;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-party{font-size:9px;font-weight:bold;letter-spacing:0.05em}
+.sb-foot{padding:8px 12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:5px}
+
+/* PRINT */
+@media print{
+  .hdr,.sidebar,.hdr-actions,.card-right,.btn-clr,body::after,.bio-drawer{display:none!important}
+  .main{margin-right:0!important;padding:0!important;columns:2;column-gap:18px}
+  body{background:#fff;color:#000;font-size:10px}
+  .layout{display:block}
+  .sec-hdr{column-span:all;margin:12px 0 6px}
+  .sec-title{color:#333;border-bottom:1px solid #ccc;width:100%;display:block;padding-bottom:3px}
+  .sec-line{display:none}
+  .card{border:1px solid #ccc;break-inside:avoid;margin-bottom:5px}
+  .card.hidden{display:none!important}
+  .card-hdr{background:#f0f0f0;border-bottom:1px solid #ccc}
+  .card-title{color:#000}
+  .card:not(.sel){display:none!important}
+  .cwrap:not(:has(.crow.on)){display:none!important}
+  .crow.on{background:#fffbe6}
+  .crow.on::before{background:#e8a000}
+  .cname,.cname-link{color:#000}
+  .radio{display:none}
+}
+
+/* MOBILE */
+@media(max-width:700px){
+  .main{margin-right:0;padding:10px}
+  .sidebar{position:fixed;top:auto;bottom:0;left:0;right:0;width:100%;height:52px;border-left:none;border-top:1px solid var(--border);transition:height 0.3s ease;z-index:200}
+  .sidebar.open{height:55vh}
+  .sb-hdr{cursor:pointer}
+  .sb-scroll,.sb-foot{display:none}
+  .sidebar.open .sb-scroll,.sidebar.open .sb-foot{display:flex;flex-direction:column}
+  .sidebar.open .sb-scroll{flex:1;overflow-y:auto}
+  .cdesc{max-width:110px}
+}
+
+/* ── BALLOT WIZARD ───────────────────────────────────── */
+.wz-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:opacity 0.22s ease}
+.wz-backdrop.wz-vis{opacity:1}
+.wz-card{background:var(--surface);border:1px solid var(--border2);border-radius:8px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;transform:translateY(24px);transition:transform 0.26s ease;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+.wz-backdrop.wz-vis .wz-card{transform:translateY(0)}
+.wz-head{padding:13px 16px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.wz-title{font-family:'Georgia','Times New Roman',serif;font-size:13px;font-weight:bold;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent)}
+.wz-close{background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:0 2px;line-height:1;transition:color 0.14s;font-family:inherit}
+.wz-close:hover{color:var(--text)}
+.wz-prog-wrap{padding:8px 16px 4px;flex-shrink:0}
+.wz-prog-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.wz-prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),#ffd55a);border-radius:2px;transition:width 0.3s ease;width:0%}
+.wz-step-lbl{font-size:10px;color:var(--muted);text-align:right;margin-top:4px;letter-spacing:0.05em}
+.wz-body{padding:16px;flex:1}
+.wz-question{font-family:'Georgia','Times New Roman',serif;font-size:15px;font-weight:bold;color:var(--text);line-height:1.4;margin-bottom:6px}
+.wz-q-sub{font-size:10px;color:var(--muted);margin-bottom:14px;letter-spacing:0.04em}
+.wz-options{display:flex;flex-direction:column;gap:7px}
+.wz-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--surface2);border:1.5px solid var(--border);border-radius:5px;cursor:pointer;transition:border-color 0.14s,background 0.14s;text-align:left;font-family:inherit;color:var(--text);width:100%}
+.wz-opt:hover{border-color:var(--border2);background:rgba(232,160,0,0.05)}
+.wz-opt.wz-sel{border-color:var(--accent);background:rgba(232,160,0,0.09)}
+.wz-opt-key{flex-shrink:0;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;color:var(--muted);transition:border-color 0.14s,color 0.14s;background:var(--surface)}
+.wz-opt.wz-sel .wz-opt-key{border-color:var(--accent);color:var(--accent);background:rgba(232,160,0,0.12)}
+.wz-opt-text{flex:1;font-size:12px;line-height:1.45}
+.wz-opt-label{display:block;font-weight:bold;font-size:12px;margin-bottom:2px}
+.wz-opt-desc{display:block;font-size:10.5px;color:var(--muted)}
+.wz-foot{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:space-between;flex-shrink:0}
+.wz-results-intro{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.wz-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.wz-rec{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:9px 10px;display:flex;flex-direction:column;gap:3px}
+.wz-rec.wz-auto{border-style:dashed;opacity:0.75}
+.wz-rec.wz-gov{grid-column:1/-1;border-color:var(--accent)}
+.wz-rec-office{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wz-rec-name{font-size:12px;font-weight:bold;color:var(--text);line-height:1.2}
+.wz-rec-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.wz-rec-match{font-size:10px;font-weight:bold;color:var(--accent)}
+.wz-rec-bio{font-size:10px;color:var(--dim);line-height:1.4;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.wz-rec-note{font-size:9px;color:#f97316;font-weight:bold}
+.wz-gov-alts{margin-top:4px;font-size:10px;color:var(--dim)}
+.wz-warn{font-size:10px;color:#f97316;margin-top:2px}
+@media(max-width:600px){.wz-grid{grid-template-columns:1fr}.wz-question{font-size:13px}.wz-rec.wz-gov{grid-column:auto}}
+</style>
+</head>
+<body>
+<header class="hdr" id="hdr">
+  <div class="hdr-top">
+    <div class="hdr-brand">
+      <div class="seal">⚖</div>
+      <div>
+        <h1>LA County Official Ballot</h1>
+        <div class="hdr-sub">Statewide Direct Primary &nbsp;·&nbsp; June 2, 2026 &nbsp;·&nbsp; County of Los Angeles</div>
+      </div>
+    </div>
+    <div class="hdr-actions">
+      <button class="btn" onclick="wzOpen()">⚡ Ballot Wizard</button>
+      <button class="btn btn-p" onclick="window.print()">⎙ Print My Ballot</button>
+    </div>
+  </div>
+  <div class="prog-row">
+    <div class="prog-bar"><div class="prog-fill" id="pf"></div></div>
+    <div class="prog-lbl" id="pl">0 of — filled</div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-f="All" onclick="setFilter(this)">All</button>
+    <button class="tab" data-f="Democratic" onclick="setFilter(this)"><span class="tdot" style="background:#3b82f6"></span>Democratic</button>
+    <button class="tab" data-f="Republican" onclick="setFilter(this)"><span class="tdot" style="background:#ef4444"></span>Republican</button>
+    <button class="tab" data-f="Green" onclick="setFilter(this)"><span class="tdot" style="background:#22c55e"></span>Green</button>
+    <button class="tab" data-f="Libertarian" onclick="setFilter(this)"><span class="tdot" style="background:#eab308"></span>Libertarian</button>
+    <button class="tab" data-f="Peace and Freedom" onclick="setFilter(this)"><span class="tdot" style="background:#a855f7"></span>Peace &amp; Freedom</button>
+    <button class="tab" data-f="American Independent" onclick="setFilter(this)"><span class="tdot" style="background:#f97316"></span>Am. Independent</button>
+    <button class="tab" data-f="No Party Preference" onclick="setFilter(this)"><span class="tdot" style="background:#6b7280"></span>No Party Pref.</button>
+    <button class="tab" data-f="Nonpartisan" onclick="setFilter(this)"><span class="tdot" style="background:#64748b"></span>Nonpartisan</button>
+  </div>
+</header>
+<div class="layout">
+  <main class="main" id="main"></main>
+  <aside class="sidebar" id="sb">
+    <div class="sb-hdr" onclick="toggleSB()">
+      <span class="sb-title">My Ballot</span>
+      <span class="sb-ct" id="sb-ct">0 selections</span>
+    </div>
+    <div class="sb-scroll" id="sb-scroll">
+      <div class="sb-empty" id="sb-empty">Select a candidate in each race.<br>Your choices appear here.</div>
+    </div>
+    <div class="sb-foot">
+      <button class="btn btn-p" onclick="window.print()" style="width:100%;justify-content:center">⎙ Print My Ballot</button>
+      <button class="btn" onclick="clearAll()" style="width:100%;justify-content:center">✕ Clear All</button>
+    </div>
+  </aside>
+</div>
+<script>
+const P={
+  'Democratic':          {c:'#3b82f6',bg:'rgba(59,130,246,0.13)',  s:'DEM'},
+  'Republican':          {c:'#ef4444',bg:'rgba(239,68,68,0.13)',   s:'REP'},
+  'Green':               {c:'#22c55e',bg:'rgba(34,197,94,0.13)',   s:'GRN'},
+  'Libertarian':         {c:'#eab308',bg:'rgba(234,179,8,0.13)',   s:'LIB'},
+  'Peace and Freedom':   {c:'#a855f7',bg:'rgba(168,85,247,0.13)', s:'P&F'},
+  'American Independent':{c:'#f97316',bg:'rgba(249,115,22,0.13)', s:'AI'},
+  'No Party Preference': {c:'#6b7280',bg:'rgba(107,114,128,0.13)',s:'NPP'},
+  'Nonpartisan':         {c:'#64748b',bg:'rgba(100,116,139,0.13)',s:'NP'},
+};
+
+let openBio=null;
+
+const BALLOT=[
+{section:'STATE OFFICES',races:[
+{id:'gov',office:'GOVERNOR',jur:'state',note:'This race spans multiple ballot pages — all candidates listed here',cx:[
+{n:'Tom Steyer',p:'Democratic',d:'Climate Advocate',bio:`Billionaire hedge fund founder turned climate activist who is self-funding this race to the tune of $147M+, potentially making it the most expensive gubernatorial campaign in U.S. history. Despite his Wall Street background — which included past investments in private prisons that drew progressive criticism — he earned an endorsement from Our Revolution (Bernie Sanders's organization), the first time they've ever endorsed a billionaire. Founded NextGen America to mobilize young voters on climate issues.`},
+{n:'Eric Swalwell',p:'Democratic',d:'U.S. Representative',flag:'⚠ Suspended Apr 12 — still on ballot',bio:`Bay Area congressman known nationally for his gun control debate line "Hell yes, we're going to take your AR-15." Suspended his gubernatorial campaign on April 12, 2026 after multiple women accused him of sexual misconduct, and simultaneously resigned from Congress — but remains on the June 2 primary ballot. Had been polling as the top Democratic candidate before the allegations surfaced.`},
+{n:'Katie Porter',p:'Democratic',d:'Consumer Protection Advocate',bio:`UC Irvine law professor turned Orange County congresswoman, nationally famous for grilling corporate executives and bank CEOs with a whiteboard during congressional hearings — a technique pioneered by her mentor Elizabeth Warren. Lost the 2024 U.S. Senate race to Adam Schiff. Her campaign acknowledges her temperament is her biggest political liability, as critics have circulated videos they say show difficult behavior with staff.`},
+{n:'Antonio Villaraigosa',p:'Democratic',d:'Housing Affordability Advocate',bio:`Former Mayor of Los Angeles (2005–2013) — the first Latino mayor of the city in 133 years. Under his tenure, violent crime fell 48% and high school graduation rates rose 60%. Former California Assembly Speaker. Lost the 2018 governor's race to Gavin Newsom and is making his second run, positioning himself as a centrist who can work across the aisle on housing, homelessness, and public safety.`},
+{n:'Xavier Becerra',p:'Democratic',d:'Voting Rights Attorney',bio:`Son of Mexican immigrants who arrived in the U.S. with just $12. First in his family to graduate college — from Stanford undergrad and Stanford Law. Served 24 years in Congress representing Los Angeles, became the first Latino California Attorney General in 2017 (filing 122 lawsuits against the first Trump administration), then served as Biden's HHS Secretary. If elected, would be California's first Latino governor in more than 150 years.`},
+{n:'Tony K. Thurmond',p:'Democratic',d:'CA State Supt. of Public Instruction',bio:`California's current State Superintendent of Public Instruction since 2019, overseeing a $150 billion public school system. Born at Fort Ord to a Panamanian immigrant mother; after her early death, faced hardship and became a social worker before entering politics. The only gubernatorial candidate supporting a proposed one-time billionaire asset tax to replace federal Medi-Cal cuts, placing him left of most Democratic rivals.`},
+{n:'Matt Mahan',p:'Democratic',d:'Mayor',bio:`43-year-old Mayor of San Jose, re-elected in 2024 with 86.6% of the vote after reducing the city's homeless population by 10% through tiny homes and interim housing. Former tech executive who co-founded Brigade Media (later acquired by Facebook). Has attracted $25M+ in political committee support from donors including Google co-founder Sergey Brin, venture capitalist Michael Moritz, and Reddit CEO Steve Huffman. Silicon Valley has rallied around him as their candidate.`},
+{n:'Chad Bianco',p:'Republican',d:'Riverside County Sheriff',bio:`Riverside County Sheriff affiliated with the Constitutional Sheriffs and Peace Officers Association — a movement holding that county sheriffs have ultimate law enforcement authority above federal agents. In April 2026, drew sharp controversy when he ordered the seizure of ballots from California's 2025 election under claimed election integrity powers, with critics accusing him of breaking state law. A fierce critic of Proposition 47's reduced penalties for theft and drug crimes.`},
+{n:'Steve Hilton',p:'Republican',d:'Small Business Owner',bio:`British-born political strategist who served as a senior adviser to UK Prime Minister David Cameron (2010–2012) before moving to Silicon Valley. Hosted Fox News's "The Next Revolution" from 2017 to 2023. Entered the governor's race in April 2025 and quickly became the Republican frontrunner, later receiving an endorsement from President Trump. Proposes suspending environmental regulations to lower gas prices and opening natural spaces for suburban single-family housing development.`},
+{n:'Leo Samuel Zacky',p:'Republican',d:'Rancher/Builder/Businessman',bio:`33-year-old fourth-generation California farmer from the Zacky Farms turkey-producing family — a longtime national producer that later collapsed. Also a nationally syndicated broadcaster. Polling at 31% with voters aged 18–44 in some surveys, the most surprising performance of any Republican in the race. Describes himself as someone who watched water mismanagement and government overreach make it nearly impossible for farm families to survive.`},
+{n:'Matthew Chase Levy',p:'Democratic',d:'Physicist/Entrepreneur',bio:`Physicist who became the first American awarded the Isaac Newton International Fellowship by the Royal Society at Oxford University. PhD from Rice University. Founded NobleAI, a science-based AI platform for chemistry and energy discovery, and AE Blue Capital, a clean energy venture firm. Running on four pillars: affordability, competitive workforce, improved daily living, and a clean energy future. Campaign slogan: "Arithmetic Is Not A Hate Crime."... wait, that's Saitoh Rao. Levy is running on science-driven innovation.`},
+{n:'Ramsey Robinson',p:'Peace and Freedom',d:'School Social Worker',bio:`Peace and Freedom Party nominee and mental health social worker in San Francisco, holding an MSW from Cal State LA. Has organized campaigns demanding justice in police brutality cases. Platform calls for freezing all rents and evictions statewide on day one in office and implementing universal single-payer healthcare for all Californians. The Peace and Freedom Party is California's socialist party, founded in 1967.`},
+{n:'Tom Woodard',p:'Libertarian',d:'Consumer Protection Advocate',bio:`Libertarian entrepreneur and conservationist with 40+ years of business experience across the U.S. and Mexico. Platform is anchored in the non-aggression principle: cancel California's high-speed rail project immediately, sell existing mass transit infrastructure to private buyers, and automate 60–80% of government functions using private AI firms by 2031. The Libertarian Party's official nominee for governor.`},
+{n:'Tim Nelson',p:'Republican',d:'Diplomat/Rights Advocate',bio:`Served as a U.S. diplomat for 23 years, working to combat human trafficking, stop atrocities, and fight corruption across the globe, gaining particular expertise in Russian affairs after studying at Oxford. Born in San Diego and raised in Orange County, graduated from USC before his foreign service career. Running to secure California's borders and use his diplomatic expertise to reduce corruption at the state level.`},
+{n:'Carolina Buhler',p:'Democratic',d:'Civil Rights Advocate',bio:`UCLA 4th-year Earth and Environmental Science student who interned at NASA's Glenn Research Center and worked in soft matter and plant biology labs before announcing her gubernatorial candidacy in June 2025. Believed to be one of the youngest people ever to seek the California governorship. Platform includes a 2% statewide rent increase cap and canceling contracts with California's ICE detention centers.`},
+{n:'Christine R. Sarmiento',p:'No Party Preference',d:'Public Health Nurse',bio:`Filipino-American public health nurse who was born in poverty in Cavite, Philippines, lost her mother at age 12, and immigrated to the United States at 18. Spent 25 years in LA County healthcare, including leading COVID-19 vaccine distribution efforts. One of the few Filipino-American women ever to seek a major statewide office in California. Running as an independent focused on healthcare access.`},
+{n:'Jon Henderson',p:'Democratic',d:'Business Owner',bio:`Bay Area financial adviser who founded Echo45 Advisors, a fiduciary-standard independent advisory firm. Wrote the book "California 2.0: An Independent Vision for California's Abundant Future." Refuses donations from corporations and lobbyists. Running as a pragmatic independent voice who argues he will govern for everyone who works hard and wants a fair shot.`},
+{n:'Xavier Becerra',p:'Democratic',d:'Voting Rights Attorney',bio:`Already listed above.`},
+{n:'Nancy D. Young',p:'No Party Preference',d:'Mother/Pastor/Mayor',bio:`Former Mayor of Tracy, California — the city's first female and African American mayor. Championed over $300 million in community improvements over more than 30 years of civic service. Also a pastor and community leader. Running as an independent because she believes California needs partnership over polarization and practical solutions over party agendas.`},
+{n:'Naomi Bar-Lev',p:'No Party Preference',d:'Musician/Programmer/Writer',bio:`San Diego-based musician, real estate broker, and writer with a BA in Economics from UCLA, along with 20+ years as a real estate broker. Her platform includes the unusual proposal to eliminate sales, income, and property taxes entirely. Has written about concerns regarding what she describes as government tyranny and police-run surveillance networks.`},
+{n:'Scott P. Shields',p:'No Party Preference',d:'Chief Executive Officer',bio:`CEO running as an independent who argues that partisan loyalty has failed California. His campaign emphasizes voting for the candidate rather than the party. One of 61 certified candidates in the June 2, 2026 primary.`},
+{n:'Frederic C. Schultz',p:'No Party Preference',d:'Human Rights Attorney',bio:`Human rights and voting rights attorney. Columbia University undergrad (1990), Georgetown University Law Center (1994). Has run for public office multiple times including for the U.S. presidency. Campaign website is framed around a "State of Emergency for Human Rights," focused on bodily autonomy, housing rights, living wages, and healthcare for all Californians.`},
+{n:'Reza Safaeabad',p:'Republican',d:'Businessman/Consultant',bio:`Republican businessman and consultant who claims involvement in nationwide police transparency initiatives and national virus research systems that played a critical role during the pandemic. Running as an independent-minded outsider who does not answer to party or donor loyalty. One of 61 certified candidates in the June 2, 2026 primary.`},
+{n:'Sam Sandak',p:'No Party Preference',d:'Filmmaker',bio:`Hollywood writer and producer from Sherman Oaks. Among his more unusual credits, was once an uncredited guitar player on an episode of "The Suite Life of Zack and Cody." Running as a political outsider in a crowded 61-person primary field.`},
+{n:'Gretha Solórzano',p:'Democratic',d:'Medical/Nuclear Engineer',bio:`Retired nuclear engineer with 30+ years of experience, trained at UC Berkeley. Her signature policy proposal is reintroducing nuclear energy to California's power grid. Identifies as Christian, Zionist, and scientist. Note: listed on ballot as Democratic Party preference but some filings indicate Republican registration — a discrepancy that occasionally arises in California's open primary system.`},
+{n:'James Athans Jr.',p:'Republican',d:'Business Owner',bio:`Republican real estate agent from Rancho Palos Verdes running under the banner "Make California Great Again." Proposes using prefabricated and modular homes to rapidly address California's housing shortage. Running as a business-oriented outsider in the Republican primary field.`},
+{n:'Larry Azevedo',p:'Democratic',d:'Real Estate Agent',bio:`Democratic candidate from Dos Palos. Real estate agent focused on policies helping immigrant families access homeownership. Running as a community-focused candidate with ties to Central Valley agricultural communities.`},
+{n:'Mohammad Arif',p:'Democratic',d:'Immigrant Organizer',bio:`Pakistani-born economist turned immigrant organizer based in Corona, California. Holds a master's degree in economics from Hailey College of Commerce in Pakistan. Has worked as a community organizer since immigrating to the United States. Has also briefly run for Lieutenant Governor of California, reflecting broad political ambition.`},
+{n:'Akinyemi Agbede',p:'Democratic',d:'Doctor/Tutor/Educator',bio:`Nigerian-American mathematician born in Lagos who holds a PhD in Mathematical Analysis from the University of Cambridge. Claims to be the first Nigerian-American to seek the California governorship, making history for the Nigerian-American community in U.S. politics. Running on STEM-driven, evidence-based leadership to ensure all Californians can thrive regardless of background.`},
+{n:'Don Grasty',p:'Democratic',d:'Special Trainer/Educator',bio:`Trainer and educator running for Governor as a Democrat. Limited public profile beyond his candidacy filing, but brings a focus on education and workforce training to the race.`},
+{n:'Don J. Grundmann',p:'No Party Preference',d:'Doctor of Chiropractic',bio:`Perennial candidate and chiropractor who serves as state chairman of the California Constitution Party. Has run for U.S. Senate in California five times, receiving as few as 123 votes in recent races. His 2026 voter guide statement drew widespread condemnation from Jewish community leaders after it promoted antisemitic conspiracy theories, including false claims about Israel and the September 11 attacks.`},
+{n:'Dawit Kelel',p:'No Party Preference',d:'Father',bio:`Father from Chula Vista focused on infrastructure investment, housing on underutilized state properties, and election integrity. Supported Proposition 50 (the Election Rigging Response Act), which passed in November 2025. Notably lists "Father" as his ballot designation — emphasizing family as a political identity.`},
+{n:'Anne Komarovsik',p:'No Party Preference',d:'Business Executive',bio:`Communications executive based in Beverly Hills running for Governor as an independent. Limited public biographical information beyond her candidacy filing.`},
+{n:'Gary Howard Kidgell',p:'Democratic',d:'Building Custodian',bio:`Describes himself as a "13th-generation American" from San Jose. Lists his actual occupation as Building Consultant (not custodian as sometimes noted) and frames his candidacy around generations of California roots and practical infrastructure expertise.`},
+{n:'Sophia Egum-A-Sam',p:'Democratic',d:'Project Manager',bio:`Democratic project manager running for Governor. Limited public biographical information available beyond her candidacy filing.`},
+{n:'Mauro Alberto Orozco',p:'No Party Preference',d:'Business Owner',bio:`Small business owner from Long Beach running as an independent. Part of the "Newmericans" movement promoting immigrant perspectives in California politics. Platform centers on public safety, economic opportunity, and dignity for all communities. Rejects special-interest donations.`},
+{n:'Barack D. Obama Shaw',p:'Democratic',d:'Business Owner',bio:`Born Cecil L. Shaw III, he legally changed his name in 2013 after what he describes as an "inspired vision" — invoking the 44th president. Army Reserve veteran, musician, and international products promoter. His candidacy has drawn national media coverage purely for the name appearing on the ballot. Not related to Barack Obama.`},
+{n:'Margaret Trowe',p:'No Party Preference',d:'Hotel Worker',bio:`Five-decade member of the Socialist Workers Party, a hotel housekeeper, and UNITE-HERE union member. Previously ran as the party's vice-presidential candidate in 2000. Platform: union-backed amnesty for undocumented workers, housing capped at 20% of income, free healthcare and childcare, and union jobs at a minimum of $30 per hour.`},
+{n:'Thunder Parley',p:'Democratic',d:'Market Analyst',bio:`Market analyst and the only Democrat in the race to sign the Howard Jarvis Taxpayers Association pledge to stand up for taxpayers — a noteworthy break from Democratic orthodoxy. Argues California's structural deficit can only be solved through economic growth, not tax increases.`},
+{n:'Erin "Zez" Zezulak',p:'Democratic',d:'Consultant/Nurse/Educator',bio:`Nurse, educator, and small business owner with nearly 30 years in the California medical system. Running as a pragmatic moderate committed to bridging political divides. Platform centers on advanced energy and water infrastructure investment and reversing the decline in the state's education system.`},
+{n:'David Zickfoose',p:'Republican',d:'Custom Jeweler',bio:`West Covina native and Republican who lists his occupation as Real Estate Investor (the ballot designation "Custom Jeweler" may reflect an earlier filing). Running as a citizen rather than a career politician, focusing on public safety, affordability, and opportunity for working families. Currently based in Huntington Beach.`},
+{n:'Lewis Herms',p:'No Party Preference',d:'',bio:`Started his career as a drain cleaner and worked his way up through leadership roles at 24 Hour Fitness and Gold's Gym. Cal Poly University Pomona alum. Proposes cutting California's budget by up to 80% through a severe government audit, arguing private-sector management experience matters more than political credentials.`},
+{n:'Rafael M. Hernandez',p:'Republican',d:'Businessman/Campaign Volunteer',bio:`Republican businessman and songwriter from Oxnard who bills himself the "We The People Guy." Argues career politicians have had their chance and that accountability and liberty must replace politics as usual. One of the smaller-profile Republican candidates in the 61-person primary field.`},
+{n:'Xavier Becerra',p:'Democratic',d:'Voting Rights Attorney',bio:`Already listed above.`},
+{n:'Joseph Cabrera',p:'Democratic',d:'Business Administrator',bio:`Business administrator from Corona, California. His grassroots "Let's Go With Joe" campaign emphasizes a pragmatic, independent approach to housing affordability, rising food costs, and labor relations. Has campaigned by meeting directly with chambers of commerce and private citizens in communities like the Imperial Valley.`},
+{n:'Elaine Colotti',p:'No Party Preference',d:'Entrepreneur/Fashion Designer',bio:`Entrepreneur and fashion designer running for Governor as an independent. Running to bring private-sector creativity and business leadership to California's challenges.`},
+{n:'Joel E. Jacob',p:'Democratic',d:'Technology Entrepreneur',bio:`Democratic tech entrepreneur from Torrance promoting his candidacy primarily through TikTok and social media, reflecting a tech-forward approach to politics. Platform focuses on innovation-driven solutions to California's problems.`},
+{n:'Max Fomio',p:'No Party Preference',d:'Painter',bio:`Part of the "Newmericans" organization promoting new-American immigrant perspectives in California politics. Small business owner and father running as a true independent, rejecting special-interest donations. Focused on housing, homelessness, public safety, employment, and energy costs.`},
+{n:'Lukasz Adam Filinski',p:'No Party Preference',d:'Father',bio:`Catholic father of three sons running as a political outsider. His first announced act as governor would be introducing a "HOLD Amendment" to the California Constitution alongside a public Truth Budget Dashboard to make state spending fully transparent. His ballot designation — simply "Father" — deliberately emphasizes family as the lens through which he views government.`},
+{n:'Serge Fiankan',p:'No Party Preference',d:'Real Estate Broker',bio:`Born in Abidjan, Ivory Coast, earned a degree in broadcast telecommunications from SF State, and became a California real estate broker in 2008 specifically to help first-time homebuyers during the financial crisis. This is his second gubernatorial campaign — he also ran as an independent in the June 2022 primary. Based in Pleasanton.`},
+{n:'Leo Naranjo IV',p:'Republican',d:'Retired Military Sergeant',bio:`Sacramento native with 30+ years of combined U.S. Army, Sacramento County, and federal service. Focused on veterans' healthcare, housing, and employment. Advocates for ending California's sanctuary status and reducing taxation. Running to honor veterans through better transition support to civilian life.`},
+{n:'Amanda Martin',p:'No Party Preference',d:'Mother/Builder/Entrepreneur',bio:`Mother, builder, and entrepreneur from Ojai. Running as an independent because she says the systems Californians rely on are no longer working and she has lived the consequences firsthand. Campaign promotes centrist, practical governance and trusting Californians with more direct power over their government.`},
+{n:'Brent Maupin',p:'No Party Preference',d:'Civil Engineer',bio:`Fifth-generation Californian born in Redding who holds licenses as a civil engineer, architect, and former contractor. Proposes using Surplus Land Act properties and older hotels to build 200,000 housing units for the homeless. Running as a professional outsider with deep technical expertise in California's built environment.`},
+{n:'Daniel Mercure',p:'No Party Preference',d:'Father/Author/Politician',bio:`Naval veteran honorably discharged in 2003. Brazilian Jiu-Jitsu professor, boxing coach, and author of "Lucifer Zenith, Corrupting Nature's God Through Government Deception." This is his third gubernatorial run — he also contested the 2021 recall election and the 2022 primary, and previously ran for Congress in 2019–2020. Of Sicilian and Mexican immigrant heritage, based in Ventura County.`},
+{n:'Betty T. Yee',p:'Democratic',d:'Family Care Manager',flag:'⚠ Withdrew Apr 20 — still on ballot',bio:`Former California State Controller (2015–2023) and the first Asian American woman to win statewide election in California. Dropped out of the 2026 governor's race on April 20, 2026 — citing insufficient fundraising support — and endorsed Tom Steyer. Her withdrawal statement made news when she expressed feeling let down by insufficient financial backing from fellow Asian Americans. Remains on the primary ballot.`},
+{n:'Alicia Olivia Lapp',p:'No Party Preference',d:'Science Teacher',bio:`Science teacher and mother who says she was personally failed by California's family court system, having witnessed domestic violence within it. Earned four college degrees in response to those experiences. Running primarily on family court reform — one of the few candidates in the race making it a central issue.`},
+{n:'Matthew Chase Levy',p:'Democratic',d:'',bio:`Physicist who became the first American awarded the Isaac Newton International Fellowship by the Royal Society at Oxford University. PhD from Rice University. Founded NobleAI (a science-based AI platform for chemistry and energy discovery) and AE Blue Capital (a clean energy VC firm). Running on four pillars: affordability, competitive workforce, improved daily living, and a clean energy future.`},
+{n:'Duane Terrence Loynes Jr.',p:'No Party Preference',d:'',bio:`Nominee of the American Solidarity Party — a minor party founded on the principle that all people have equal and inviolable dignity. The party attempts to transcend the typical left-right divide by being simultaneously pro-life and pro-labor, rooted in Christian democratic values.`},
+{n:'Randeep S. Dhillon',p:'Republican',d:'',bio:`Punjabi-American who immigrated from India in 1986, built Big Time Pest Control from the ground up, sold it, and became a chaplain. Running under the slogan "Make Affordable California Again" (MACA). Holds degrees in finance and economics. His candidacy highlighted tensions in the Republican Party around immigrant voices.`},
+{n:'Livingforged Andcountry Demott',p:'No Party Preference',d:'Political Chaplain',bio:`His full legal name — "LivingForGod AndCountry DeMott" — makes him the first person in California history certified for the gubernatorial ballot with a legal name that serves, in his words, as a living testimony. Built a pest control business, sold it, became a chaplain working with the forgotten and broken. California's Historical Archives confirmed he set three separate electoral milestones by appearing on the 2026 ballot.`},
+{n:'Patricia De Luca Basualdo',p:'Republican',d:'Real Estate Broker',bio:`Republican real estate broker from Redwood City who accepts only donations of time — not money — describing herself as independent-minded. A truly self-funded candidate who relies on volunteer hours rather than financial contributions to power her campaign.`},
+{n:'Louis A. De Barricua',p:'Democratic',d:'Outdoor Business Owner',bio:`Teacher and business owner from Los Angeles who has created an initiative called "The Golden Road" — a community transformation philosophy he describes as a new choice for California. His campaign is organized around this philosophy rather than conventional policy positions.`},
+{n:'Raju Rab',p:'Democratic',d:'',bio:`Worked for 22+ years in public interest, human rights, and civil rights advocacy. Also an accomplished aviator who became a flight instructor, chief pilot, and founded both a flight school and an airline. Later built a computer infrastructure and training facility. Campaign priorities include debt-free education reform and immigration amnesty paired with a fee system to boost agricultural labor.`},
+{n:'Saitoh Rao',p:'Democratic',d:'Professor',bio:`UC Berkeley EECS professor who has taught discrete mathematics, probability, and pedagogy for nearly three decades. Earned his PhD in 1989 and joined Berkeley's faculty in 1999 after working at NEC Research Institute. Currently on sabbatical to run his campaign, which centers on the memorable slogan: "Arithmetic Is Not A Hate Crime" — an argument that California's problems are solvable with rigorous, data-driven thinking.`},
+]},
+
+{id:'ltgov',office:'LIEUTENANT GOVERNOR',jur:'state',cx:[
+{n:'Josh Fryday',p:'Democratic',d:"Governor's Cabinet Member",bio:`Navy JAG officer who worked on military commissions at Guantánamo Bay and helped with disaster relief after Japan's 2011 Fukushima disaster. Later served as COO of NextGen Climate and Mayor of Novato before Governor Newsom appointed him California's Chief Service Officer in 2019. Built what he calls the nation's largest service corps — bigger than the entire U.S. Peace Corps. The only Lt. Gov candidate with a multimillion-dollar war chest; endorsed by Newsom, Pete Buttigieg, and Barbara Boxer.`},
+{n:'Michael Tubbs',p:'Democratic',d:'Anti-Poverty/Non-Profit Director',bio:`Raised in poverty in Stockton by a teenage mother with his father serving a life sentence in prison. Won a scholarship to Stanford and graduated with honors. At age 26 became Stockton's youngest-ever and first Black mayor. Launched America's first government-funded guaranteed income pilot — giving 125 residents $500/month with no conditions — which inspired similar programs nationwide. Defeated for reelection in 2020 by a lesser-known Republican. Now running for Lt. Gov backed by an IE committee funded by Snap CEO Evan Spiegel.`},
+{n:'Fiona Ma',p:'Democratic',d:'County Treasurer/CPA',bio:`Current California State Treasurer since 2019 — the first woman of color elected to that office. Won in 2018 with more votes than any prior treasurer candidate in California history. Term-limited as Treasurer, so she is now running for Lieutenant Governor. Has raised approximately $4.6 million — the largest war chest in the Lt. Governor race.`},
+{n:'Janelle Kellman',p:'Democratic',d:'College Trustee/Teacher',bio:`Environmental lawyer and climate risk expert who served on the Sausalito City Council and as Mayor in 2022. Founded the Center for Sea Rise Solutions to help governments reduce economic risk from wildfires, flooding, and extreme weather. The only Lt. Gov candidate building her campaign around a detailed plan to cut electricity bills in half over a decade by changing how fire prevention is funded. Endorsed by LGBTQ Democratic clubs.`},
+{n:'Abdur Rahman Sikder',p:'Democratic',d:'Professor',bio:`Computer science professor at San Francisco State University who immigrated from a small village in Bangladesh. Research interests include bioinformatics, machine learning, and web programming. Running on a platform of tuition-free college and universal healthcare for all Californians.`},
+{n:'Tim Myers',p:'Democratic',d:'Agricultural/Music Producer',bio:`Founding member and bassist of OneRepublic from 2002 to 2007, before leaving the band. Went on to produce 16 gold and platinum records and founded Palladium Records. Also runs an agricultural operation. Believed to be the only former member of a major rock band currently running for statewide office in California.`},
+{n:'Jeyson Lopez',p:'Democratic',d:'Customer Experience Consultant',bio:`Born in Los Angeles, raised in East Side San Jose. Graduated from Cal State East Bay in political science. Works as a customer experience consultant. Wants to "fundamentally redefine" the lieutenant governor's office, which he argues is too often treated as merely ceremonial. Focused on education, workforce development, and supporting mixed-status immigrant families.`},
+{n:'Oliver Ma',p:'Democratic',d:'Civil Rights Lawyer',bio:`Civil rights attorney who grew up in Southern California in an immigrant family, graduated from UC Berkeley and Harvard Law School. Has represented tenants against slumlords and immigrant families facing ICE raids. When he was in middle school, his grandmother was detained by federal agents and he personally made the phone calls and filled out the paperwork to secure her release. The first statewide candidate ever endorsed by the California Democratic Socialists of America.`},
+{n:'Gloria Romero',p:'Republican',d:'Executive Businesswoman',bio:`Former California Senate Majority Leader — the first woman ever to hold that role — who served nearly 12 years in the Legislature representing East LA and the San Gabriel Valley as a Democrat before registering as a Republican in 2024. Steve Hilton publicly asked her to be "on the ticket" with him. Long known for championing education reform and charter schools, which put her at odds with her former Democratic colleagues.`},
+{n:'Ebie Lynch',p:'Republican',d:'Business Owner/Nurse',bio:`Veteran, nurse, mother, and labor advocate from Orangevale. Christian and pro-family, vocal about parental rights in education and healthcare. Bringing a healthcare professional's perspective to the lieutenant governor's race as a Republican.`},
+{n:'Rakesh Christian',p:'No Party Preference',d:'Business Owner',bio:`Serial candidate from the Bay Area who previously ran for California governor in 2014 and for Mayor of Antioch in 2024. This is at least his third statewide or local campaign in about a decade. Running as a no-party-preference independent focused on pragmatic business-oriented governance.`},
+{n:'Sean Collinson',p:'No Party Preference',d:'Mediator',bio:`Professional mediator and trained hostage negotiator with over two decades of conflict-resolution experience. Argues that his skills at finding common ground translate directly to governing a deeply divided state. Was raised by a single mother and emphasizes affordability and cost of living.`},
+{n:'David Collenberg',p:'Republican',d:'Business Owner',bio:`Fifth-generation California farmer who runs Lost Coast Hay and Feed in Eureka and lives in Siskiyou County. Openly acknowledges having been homeless, broke, and jailed before turning his life around. Running largely as a solo campaign without California Republican Party backing, focused on rural issues: water rights, wildfire management, and agriculture.`},
+{n:'David Fennell',p:'Republican',d:'Accountant',bio:`Tech entrepreneur with a master's degree in Asian Studies from the University of San Francisco. Claims to have discovered government fraud while traveling all 58 California counties on business, reported it with no official response, and then decided to run for lieutenant governor himself. Also working to set up a vinyl record-pressing plant in California.`},
+{n:'Alice Stix',p:'Peace and Freedom',d:'Physician/RN',bio:`OB-GYN and HIV specialist in Los Angeles County for 32 years. The Peace and Freedom Party candidate for lieutenant governor, overwhelmingly endorsed by the PFP Central Committee. Running on a platform of free, high-quality healthcare for all California residents, including undocumented immigrants — driven by her decades of frontline medical experience.`},
+{n:'Skip Skelton',p:'Republican',d:'Defense Technology Engineer',bio:`Defense technology executive who co-founded AI Nsight, a company focused on using artificial intelligence to modernize government decision-making and strengthen national security. Republican focused on cutting regulations, lowering costs, and restoring public safety using tech-forward approaches to governance.`},
+]},
+
+{id:'sos',office:'SECRETARY OF STATE',jur:'state',cx:[
+{n:'Shirley N. Weber',p:'Democratic',d:'California Secretary of State (Incumbent)',bio:`Born to sharecroppers in Jim Crow Arkansas — her father didn't vote until his 30s and was once threatened by a lynch mob. Earned bachelor's, master's, and doctoral degrees from UCLA by age 26, then taught Africana Studies at San Diego State for 40 years. When appointed Secretary of State in 2021, became the first Black person to hold that office in California's 175-year history. Authored the bill making California the first state to require ethnic studies as a high school graduation requirement.`},
+{n:'Donald P. (Don) Wagner',p:'Republican',d:'Orange County Supervisor',bio:`Former Mayor of Irvine, former California State Assemblymember (2010–2016), and current chair of the Orange County Board of Supervisors. Running on an election-integrity platform that includes requiring voter ID at the polls. Pushed for the release of sensitive voter data to the Trump Department of Justice over claims of voting irregularities. The only Republican in the race and the sole serious challenger to incumbent Weber.`},
+{n:'Michael Feinstein',p:'Green',d:'Electoral Reform Consultant',bio:`Co-founder of the Green Party of California and former Santa Monica Mayor (2000–2002). Has run for California Secretary of State before — 2026 is at least his third attempt. A professional electoral reform consultant whose career is devoted almost entirely to advancing third-party causes and proportional representation, including ranked-choice voting.`},
+{n:'Gary N. Blenner',p:'Green',d:'Teacher',bio:`Green Party teacher originally from Queens, New York. At least his second run for California Secretary of State, having also lost in the June 2022 primary. Running as a Green alongside fellow Green Party candidate Michael Feinstein in a race that is otherwise a two-candidate contest between Weber and Wagner.`},
+]},
+
+{id:'ctrl',office:'CONTROLLER',jur:'state',cx:[
+{n:'Malia M. Cohen',p:'Democratic',d:'State Controller (Incumbent)',bio:`First Black woman elected California State Controller, winning in 2022. Oversees spending for a state with a nearly $350 billion budget. Previously served on the San Francisco Board of Supervisors for over a decade, developing a reputation for fiscal oversight and equity-focused budgeting. Has raised $1.2M+ for her reelection bid.`},
+{n:'Herb W. Morgan',p:'Republican',d:'Chief Investment Officer',bio:`Founded Efficient Market Advisors (EMA), one of the nation's earliest ETF-based investment firms, growing it to $1.5 billion in assets before it was acquired by a Wall Street firm in 2017. Proposes "radical transparency" — putting agency ledgers online in real time via blockchain and using AI-powered audits to detect waste and fraud. Frames himself as private-sector counterweight to what he calls reckless state spending.`},
+{n:'Meghann Adams',p:'Peace and Freedom',d:'School Bus Driver',bio:`School bus driver living in San Francisco's Tenderloin neighborhood who serves as president of her union — which she also manages financially. Running on exposing corporate landlords, analyzing the cost of a single-payer Medi-Cal system, and divesting state investments from companies supporting Israel's war in Gaza. A 15-year union leader and anti-war activist who has raised about $16,000 for her campaign.`},
+]},
+
+{id:'treas',office:'TREASURER',jur:'state',cx:[
+{n:'Eleni Kounalakis',p:'Democratic',d:'Lieutenant Governor of California',bio:`California's current Lieutenant Governor — the first woman ever elected to that office. Former U.S. Ambassador to Hungary under President Obama (2010–2013). Daughter of prominent Sacramento developer Angelo Tsakopoulos. Dropped out of the 2026 governor's race and pivoted to the treasurer's race, entering it with nearly nine times more campaign cash than all other candidates combined. Endorsed by Hillary Clinton, Nancy Pelosi, and Gavin Newsom.`},
+{n:'Anna M. Caballero',p:'Democratic',d:'California State Senator',bio:`Longtime Salinas politician — former mayor, Assembly member, state senator, and state housing official under Governor Jerry Brown. Represents a Central Valley district. Despite lower name recognition than Kounalakis, has out-raised her in fundraising since the start of 2026. Deep roots in California's farming communities set her apart from the other major Democrats in the race.`},
+{n:'Tony Vazquez',p:'Democratic',d:'Member, State Board of Equalization',bio:`Former Santa Monica Mayor — the city's first Latino mayor. Spent eight years on the California State Board of Equalization before being term-limited out. Has campaigned by stressing his Latino roots and his connection to legendary labor leader Dolores Huerta. Running as a champion of working-class Californians.`},
+{n:'Jennifer Hawks',p:'Republican',d:'',bio:`The California Republican Party's formally endorsed candidate for Treasurer. Longtime Silicon Valley retiree and local Republican activist. Most recently served on the executive team at Sacred Heart Schools (Atherton) — a private school popular with Bay Area venture capital elite. Has never held elected office, a fact she touts as a strength. Running on fiscal transparency and accountability.`},
+{n:'David Serpa',p:'Republican',d:'Businessman/Author/Father',bio:`Republican Marine Corps combat veteran, real estate agent, and author who has written plays and books touching on autism, spirituality, and business. Was passed over for the California Republican Party's formal endorsement, which went to Jennifer Hawks. Running to check what he sees as California's reckless fiscal expansion.`},
+{n:'Glenn Turner',p:'Green',d:'',bio:`Former owner of a pagan and metaphysical shop and crystal/Tarot card seller who became a mental health activist. The Green Party candidate for Treasurer, running on divesting public dollars from war profiteers, fossil fuel corporations, and companies involved in human rights abuses. Endorsed by both the Green Party and the Peace and Freedom Party — the left-unity candidate in the race.`},
+]},
+
+{id:'ag',office:'ATTORNEY GENERAL',jur:'state',cx:[
+{n:'Rob Bonta',p:'Democratic',d:'Attorney General (Incumbent)',bio:`Born in the Philippines to missionary parents, came to the U.S. at two months old. Grew up near the United Farm Workers headquarters in La Paz, shaped by his family's commitment to social justice. Yale undergrad and Yale Law School. First Filipino American elected to the California Legislature (2012) and first Filipino American attorney general of any U.S. state. Since President Trump's reelection, has filed or joined more than 50 lawsuits against the Trump administration.`},
+{n:'Michael E. Gates',p:'Republican',d:'Deputy United States Attorney',bio:`Husband and father of five who served three consecutive terms (10 years) as Huntington Beach's elected city attorney, becoming nationally known for legal battles against the state over vaccine mandates, mask requirements, and sanctuary city policies. Appointed in 2025 as Deputy Assistant Attorney General in the U.S. Justice Department's Civil Rights Division overseeing about 100 attorneys. Left that federal post to run for California AG, criticizing Bonta for prioritizing White House fights over fighting crime.`},
+{n:'Marjorie Mikels',p:'Green',d:'Attorney/Justice Advocate',bio:`Twice the first female attorney hired at firms in San Bernardino County. Retired specifically to run for AG in opposition to Israel's bombing campaign in Gaza and government-tech company surveillance partnerships. UCLA law degree (1981) after Westmont College (1968) — a 13-year gap reflecting an unusual life path. Running on a Green Party platform of anti-surveillance, anti-war, and aggressive environmental enforcement.`},
+]},
+
+{id:'ins',office:'INSURANCE COMMISSIONER',jur:'state',cx:[
+{n:'Ben Allen',p:'Democratic',d:'California State Senator',bio:`State Senator representing Santa Monica since 2014. Has pledged not to accept a single dollar from the insurance industry during his campaign — a remarkable self-imposed constraint given the industry's enormous financial interests. Lecturer at UCLA Law School. Running on consumer protection, wildfire recovery, and requiring insurers to disclose their fossil fuel investments.`},
+{n:'Jane Kim',p:'Democratic',d:'Attorney/Consumer Advocate',bio:`First Korean American elected official in San Francisco, representing District 6 (Tenderloin, SoMa, Mission) on the Board of Supervisors from 2011 to 2019. Currently executive director of the California Working Families Party. Endorsed by Bernie Sanders. Proposing a state-run natural disaster insurance pool modeled on New Zealand and France, a cap on insurance CEO pay, and a public auto insurance option — the most structurally radical candidate in the field.`},
+{n:'Patrick Wolff',p:'Democratic',d:'Financial Analyst',bio:`Two-time U.S. Chess Champion (1992 and 1995), winning his first title before graduating from college. Graduated magna cum laude from Harvard. Spent 25+ years in finance and insurance analysis. Before running, passed his California property and casualty insurance license exam to deepen his knowledge of the industry. Taking no corporate money.`},
+{n:'Steven Craig Bradford',p:'Democratic',d:'Education Organization Boardmember',bio:`Former California State Senator from the 35th District (2016–2024). Grew up in Gardena, son of a nurse mother and small-business-owner father. Known for work on juvenile justice reform, civil rights, and environmental justice. One of few Black legislators to serve in both chambers of the California Legislature. Proposing public-private risk sharing and linking insurance policy to land-use planning to discourage development in high-risk areas.`},
+{n:'Stacy A. Korsgaden',p:'Republican',d:'Licensed Insurance Agent',bio:`Licensed insurance agent since 1988 — giving her 37+ years in the industry, the most direct experience among all candidates in this race. Republican running on a free-market platform to restore competition among insurers, expand consumer choices, and lower costs. Her decades of working directly with families and small businesses on insurance decisions are the core of her pitch.`},
+{n:'Eric Thor Aarnio',p:'Republican',d:'',bio:`Sacramento-based contractor whose home rebuilding work after disasters gave him firsthand knowledge of how badly the insurance claims process fails consumers. Republican proposing to make higher-risk policyholders bear more financial responsibility and improve transparency in rate-setting.`},
+{n:'Sean Lee',p:'Republican',d:'Financial Services Executive',bio:`Financial services executive with 28 years in insurance. Earlier in his career conducted scientific research at NASA's Jet Propulsion Laboratory through Caltech — one of the more distinctive backgrounds for an insurance industry candidate. Republican focused on AI and InsurTech innovation in insurance regulation.`},
+{n:'Robert P. Howell',p:'Republican',d:'Cybersecurity Company CEO',bio:`Silicon Valley cybersecurity manufacturing company president running for Insurance Commissioner for the second time — also ran in 2022. Republican who pledges never to take political donations from insurance companies. Focused on requiring insurers to offer coverage in areas where they already operate and strengthening consumer protections against arbitrary cancellations.`},
+{n:'Merritt Farren',p:'Republican',d:'Consumer Advocate/Attorney',bio:`Former Senior VP and General Counsel at the Disneyland Resort and Associate General Counsel for Media at Amazon. Lost his Pacific Palisades home in the January 2025 wildfires, then became an official consumer advocate in State Farm's rate-increase proceedings. Proposing "CAL Reinsure" — a state-backed reinsurance authority modeled on post-9/11 federal terrorism risk programs — to keep insurers writing policies in California.`},
+{n:'Eduardo "Lalo" Vargas',p:'Peace and Freedom',d:'',bio:`LAUSD science teacher who helped with community response during the 2025 Los Angeles wildfires. Peace and Freedom Party candidate calling to abolish private insurance companies entirely and create a fully public insurance system. Graduated from Kenyon College and Cal State Los Angeles. His positions place him at the furthest left edge of a large field.`},
+{n:'Keith W. Davis',p:'American Independent',d:'Insurance Agent',bio:`Insurance agent from Winchester, California. The only American Independent Party candidate in the race — the AI party was founded in 1967 by supporters of George Wallace. Proposes reforming California's wildfire risk scoring system, which he argues mislabels too much of the state as high fire risk, and creating an independent claims review panel for denied claims.`},
+]},
+
+{id:'boe',office:'BOARD OF EQUALIZATION — 3rd District',jur:'state',cx:[
+{n:'Mike Gipson',p:'Democratic',d:'State Assemblymember/Father',bio:`California Assemblymember representing Carson since 2014 and the longest-serving Democratic Caucus Chair in California history. Chairs the Assembly's Revenue and Taxation Committee — directly relevant to the BOE's mission. Entering the race with $300,000 already raised and endorsements from Controller Malia Cohen and LA County Supervisor Janice Hahn.`},
+{n:'Yvonne Ytu',p:'Democratic',d:'Public Finance Boardmember',bio:`(Ballot name; her campaign uses "Yvonne Yiu.") Former Monterey Park city councilmember and mayor. Has previously run for California State Controller (2022) and State Senate (2024) — reflecting persistent statewide ambition. Immigrated to the United States and built a career in financial business leadership.`},
+{n:'Zhijing Liu',p:'Democratic',d:'Banker',bio:`Democratic banker running for the Board of Equalization's 3rd District, which oversees tax administration for all of Los Angeles County. Financial industry expertise is directly relevant to the board's tax oversight and appellate functions.`},
+{n:'Rudy Bermudez',p:'Democratic',d:'Taxpayer Advisor',bio:`One of the most varied public-service careers in the field: former law enforcement officer, school board member, city council member, Assemblymember, and taxpayer/governmental affairs consultant. Brings decades of experience across government sectors with a focus on protecting taxpayers and demanding accountability.`},
+{n:'Baru Alejandro Sanchez',p:'Democratic',d:'CPA/Internal Auditor',bio:`Licensed CPA and former city councilmember and mayor of Cudahy (2013–2018). Cudahy is one of the smallest and most densely populated cities in California, giving Sanchez ground-level perspective on local fiscal challenges. His dual credentials as a CPA and elected city official are central to his pitch for the tax-administration board.`},
+{n:'Samuel P. Sukaton',p:'Democratic',d:'Labor Union Organizer',bio:`Union organizer, policy advocate, and former Jeopardy! contestant who grew up in the Inland Empire. Has spent 15 years at the intersection of public policy and community organizing. Most recently led organizing for AFT Local 1521 (the LA Community College Faculty Guild) and directed Bernie Sanders's 2020 primary campaign in Inland Southern California. His Jeopardy! appearance and labor-left background are equally distinctive credentials.`},
+{n:'Stephan Hohl',p:'Republican',d:'',bio:`(Listed as "Stephan Hohil" in some records.) Republican candidate for the 3rd District BOE seat. Running on ethics, transparency, and conservative principles in tax administration for Los Angeles County.`},
+{n:'Carlo Basael',p:'Republican',d:'Taxpayer Advisor',bio:`(Listed as "Carlo Basail" in some records.) Republican taxpayer advisor with a public administration background. Active in Los Angeles GOP circles. Running on conservative principles in tax oversight and accountability.`},
+{n:'Rey Portela',p:'Republican',d:'Licensed Tax Preparer',bio:`Licensed tax preparer based in Santa Ana. Brings practical, client-side experience with California's tax system to the Board of Equalization race — representing the perspective of working taxpayers and small businesses navigating the tax code daily.`},
+{n:'Marje Manvel',p:'No Party Preference',d:'Commissioner Vice Chair',bio:`No party preference candidate who ran for this same BOE 3rd District seat in 2022 (losing in the general election to Tony Vazquez). Currently serving as a commissioner vice chair, bringing institutional knowledge and repeat candidacy interest in the office.`},
+]},
+
+{id:'spi',office:'SUPERINTENDENT OF PUBLIC INSTRUCTION',jur:'state',cx:[
+{n:'Richard Barrera',p:'Nonpartisan',d:'State Superintendent Advisor',bio:`18-year veteran of the San Diego Unified School District board, including five years as board president. Veteran union organizer backed by the California Teachers Association — the most powerful endorsement in any state education race. Largely unknown outside San Diego until Superintendent Thurmond named him senior adviser at the California Department of Education in 2024. The CTA's backing made him an overnight frontrunner despite lower statewide name recognition.`},
+{n:'Nichelle M. Henderson',p:'Nonpartisan',d:'College Trustee/Teacher',bio:`Middle school math teacher who started in Compton Unified. Elected to the LA Community College District Board of Trustees in 2020 — the largest community college district in the country — and reelected in 2024 with over one million votes across LA County, more than any other current candidate for superintendent received in any prior election. Would be the first Black woman to serve as California Superintendent of Public Instruction if elected.`},
+{n:'Anthony Rendon',p:'Nonpartisan',d:'Democracy Advocate/Educator',bio:`Former Speaker of the California State Assembly (2016–2023) — one of the most powerful positions in California government, and the longest consecutive tenure in modern times. Before politics, spent two decades leading preschool and early childhood education programs. Shepherded state budgets increasing K-12 investment by 80% and helped create California's universal pre-K program. As speaker, tightened accountability rules for charter schools.`},
+{n:'Al Muratsuchi',p:'Nonpartisan',d:'Assemblymember/Classroom Educator',bio:`California Assemblymember from Torrance who chairs the Assembly's Education Committee AND simultaneously teaches government as an adjunct professor at El Camino Community College — making him one of the few active legislators who is also a working classroom instructor. Former Deputy DA and Palos Verdes school board member. Co-authored Proposition 2, the $10 billion school facilities bond passed in 2024.`},
+{n:'Josh Newman',p:'Nonpartisan',d:'Educator/Strategic Advisor',bio:`Army veteran who founded an organization helping veterans transition to civilian careers after service. Former California State Senator and chair of the Senate Education Committee. Was recalled in 2018 over his vote for a gas tax increase, then dramatically won his seat back in 2020 — one of the more unusual comeback stories in recent California political history. Co-authored the $10 billion school facilities bond and authored a law guaranteeing every California elementary student the right to recess.`},
+{n:'Sonja Shaw',p:'Nonpartisan',d:'School District President',bio:`President of the Chino Valley Unified School District board. Made national headlines in 2023 when she presided over a meeting at which State Superintendent Tony Thurmond was escorted out during a heated policy debate. Was sued by Attorney General Rob Bonta over her board's policy requiring schools to notify parents if a student uses a different gender identity — a lawsuit that became a national rallying point for parental-rights conservatives. The only candidate in this race without a college degree, which is highly unusual for a California statewide education office.`},
+{n:'Gus Mattammal',p:'Nonpartisan',d:'Educator/Executive/Author',bio:`Director of Advantage Testing of Silicon Valley for 22 years. Physics and math degree from Pomona College, MBA from Yale. Grew up in inner-city St. Louis where his high school had a 25% graduation rate for 25 consecutive years — he became the only child on his block to finish high school because his parents sacrificed to send him to a Jesuit school. Has written a 200-page book "A is for Average" and is conducting a 50-stops-in-50-days tour of California.`},
+{n:'Frank Lara',p:'Nonpartisan',d:'Teacher/Union VP',bio:`K-12 classroom math teacher and Vice President of United Educators of San Francisco. Peace and Freedom Party-aligned candidate calling to tax corporations and billionaires to fully staff schools, reduce class sizes, establish ICE-free school environments, and provide free childcare and college for all. Running as the explicitly socialist option in the superintendent's race.`},
+{n:'Ainye Long',p:'Nonpartisan',d:'Public School Teacher',bio:`Fifth-generation California public school teacher (and third-generation public school student). Has taught 8th-grade mathematics for 19 years in Oakland, Richmond, Los Angeles, and San Francisco. Currently teaches and chairs the math department at Willie L. Brown Middle School in SFUSD. Polled at 9% among likely voters despite running without an active campaign — suggesting significant ballot-position or name-recognition advantage.`},
+{n:'Wendy Castaneda Leal',p:'Nonpartisan',d:'School District Superintendent',bio:`The only candidate in this race who is currently a working school district superintendent — running Semitropic Elementary School District in the San Joaquin Valley. Brings a rural, agricultural community perspective that sets her apart from the urban and legislative candidates. Focused on dual-language programs, ESL support, and ensuring basic student needs including nutrition and technology access.`},
+{n:'Nichelle M. Henderson',p:'Nonpartisan',d:'College Trustee/Teacher',bio:`Already listed above.`},
+]},
+]},
+
+{section:'CITY / LOCAL',races:[
+{id:'asm40',office:'STATE ASSEMBLY — 40th District',jur:'city',cx:[
+{n:'Pilar Schiavo',p:'Democratic',d:'Assemblywoman (Incumbent)',bio:`Spent 20+ years as a nurse advocate and labor organizer before entering politics, helping deliver healthcare to over one million people and deploying nurses to disaster and COVID-19 response sites. The first woman ever elected to represent the 40th Assembly District. Chairs the Assembly Committee on Military and Veterans Affairs. Her path to politics was shaped by watching her father's life transform when he joined a union after surviving Agent Orange-related cancer.`},
+{n:'Rickey Tracy Hayes II',p:'Republican',d:'Pharmacist/Businessman',bio:`Marine Corps veteran, former custody officer and police officer, who later became a Journeyman Lineman with IBEW Local 47 working in energy infrastructure — an unusually eclectic blue-collar resume for a Republican candidate. Has lived in the Santa Clarita Valley for 13+ years with his wife and family. Running on public safety, lower cost of living, and support for working families.`},
+{n:'Andreas Farmakalidis',p:'Republican',d:'Business Owner/Professor',bio:`Immigrant from Cyprus who founded California MusicBox in Northridge and earned a graduate degree from Harvard University in 2022, in addition to earlier degrees from Berklee College of Music and Brandeis University. Serves as president of the North Valley Regional Chamber of Commerce and teaches college courses helping students build career skills. Previously ran for the LAUSD school board. His surname literally means "farmer's son" in Greek.`},
+{n:'Elizabeth Wong Ahlers',p:'Republican',d:'',bio:`Sixth-generation Californian with a doctorate in applied theology. Has taught English at UCLA and multiple California community colleges. Served on the Crescenta Valley Town Council from 2022 to 2024. Previously ran for California's 25th State Senate District in 2024. One of three Republicans competing to advance to the general election against incumbent Schiavo.`},
+]},
+{id:'usr27',office:'U.S. REPRESENTATIVE — 27th District',jur:'city',cx:[
+{n:'George Whitesides',p:'Democratic',d:'U.S. Representative (Incumbent)',bio:`Former NASA Chief of Staff under the Obama administration, then spent a decade as the first CEO of Virgin Galactic, overseeing commercial spaceflight development at the Mojave Air and Space Port. Narrowly unseated Republican incumbent Mike Garcia in 2024 by about 8,000 votes. Sits on the House Armed Services Committee and the Science, Space, and Technology Committee. One of the most astronaut-adjacent members of Congress — with direct spaceflight company leadership experience.`},
+{n:'Jason Gibbs',p:'Republican',d:'City Councilmember/Engineer',bio:`Mechanical engineer (B.S. and M.S. from Cal Poly) who worked as Senior Principal Engineer in the aerospace industry before entering politics. Served as a Santa Clarita City Councilmember and former Mayor. Backed by former Rep. Mike Garcia, who held the 27th District seat until Whitesides defeated him in 2024.`},
+{n:'Roberto Ramos',p:'Democratic',d:'Retired Military Analyst',bio:`Marine veteran who served in Military Intelligence and deployed to combat operations. Currently enrolled in UCLA School of Law's master's program after earning a degree from UC Berkeley. Running on restoring democratic institutions and economic fairness, drawing on his military background and academic credentials.`},
+{n:'Caleb Norwood',p:'Democratic',d:'',bio:`College student challenging incumbent George Whitesides from within the Democratic Party — one of the more unconventional figures in the race. Represents the progressive wing of the Democratic primary field seeking an alternative to the incumbent in this competitive Santa Clarita/Antelope Valley district.`},
+]},
+]},
+
+{section:'COUNTY',races:[
+{id:'sheriff',office:'SHERIFF',jur:'county',cx:[
+{n:'Robert G. Luna',p:'Nonpartisan',d:'Sheriff of LA County (Incumbent)',bio:`Made history in 2022 by becoming the first person in over a century to unseat an incumbent LA County Sheriff, defeating the controversial Alex Villanueva. A 36-year veteran of the Long Beach Police Department who retired as Chief. First Latino elected Sheriff of LA County. Has overseen a 14% decrease in homicides as Sheriff and formally banned deputy gangs — a direct rebuke of his predecessor's tenure.`},
+{n:'Alex Villanueva',p:'Nonpartisan',d:'Retired Peace Officer',bio:`Former LA County Sheriff (2018–2022) who lost his 2022 reelection bid 61%–39% to Luna. His tenure was among the most turbulent in the department's history — feuds with the Board of Supervisors, resistance to oversight subpoenas, rehiring a deputy fired for misconduct, and allegations of tolerating deputy gangs. Switched from Democrat to Republican after leaving office. Now suing the county for placing him on a "do not rehire" list following an investigation into harassment of women of color. Attempting a political comeback.`},
+{n:'Andre N. White',p:'Nonpartisan',d:'',bio:`At 34 years old, the youngest Black candidate ever to run for LA County Sheriff — and if elected, would be the first Black person to hold the position in the department's history. A current LASD detective who also spent seven years as an EMT alongside LA County Fire Department. Notably challenging his own boss, Sheriff Robert Luna.`},
+{n:'Karla Carranza',p:'Nonpartisan',d:'Sergeant',bio:`Born in civil war-era El Salvador and brought to the U.S. at age 6. Joined the LASD in 2005 after being attacked at 16 in Lynwood and losing a younger brother to gang violence — personal tragedies that directly drive her public safety advocacy. An 18-year sergeant, she proposes streamlining hiring by outsourcing background checks to private contractors, similar to the CHP model.`},
+{n:'Brendan Corbett',p:'Nonpartisan',d:'Retired Assistant Sheriff',bio:`40+ year LASD veteran who spent much of his career in the Special Enforcement Bureau overseeing SWAT and K-9 units. Retired as Assistant Sheriff over custody operations. Running on a "back-to-basics" platform focused on expanding the Reserve Program and overhauling custody release procedures to tie re-entry services to substance abuse and mental health treatment.`},
+{n:'Eric Strong',p:'Nonpartisan',d:'Probation Operations Chief',bio:`Marine Corps veteran who began his law enforcement career as a Compton police officer in the early 1990s. Ran for Sheriff before (finished third in 2022). Later served as chief safety and security officer for LA County Probation before retiring in 2025. His candidacy has been shadowed by a $10 million claim filed by a probation supervisor alleging unlawful detainment naming Strong directly.`},
+{n:'Mike Bornman',p:'Nonpartisan',d:'Retired Sheriff Captain',bio:`36-year LASD veteran with a Master's Degree in Organizational Leadership and executive certifications from Cornell and Texas A&M. Warning voters of a "tragic national record" of 14 department-related suicides under the current administration. Challenging his former employer, arguing the department is failing its own workforce through forced overtime and chronic underfunding.`},
+{n:'Oscar Antonio Martinez',p:'Nonpartisan',d:'Law Enforcement Officer',bio:`Marine Corps veteran who served in combat operations in Iraq and Afghanistan before joining the LASD. Has spent roughly 16 years in the department working in jails, as a chief's executive aide, and as a departmental spokesman. Currently a Palmdale Watch Commander. Running on a "service-over-power" philosophy, pushing for drone technology and modernized policing strategies.`},
+]},
+{id:'assess',office:'ASSESSOR',jur:'county',cx:[
+{n:'Jeffrey Prang',p:'Nonpartisan',d:'Assessor, LA County (Incumbent)',bio:`Current LA County Assessor since 2014 — managing the largest local assessment agency in the United States, overseeing 2.6 million properties valued at over $2.2 trillion with 1,400 employees. Before becoming Assessor, served nearly 18 years on the West Hollywood City Council including four terms as Mayor. Harvard Kennedy School graduate. Known for championing property tax reform and assessment equity.`},
+{n:'Stephen A. Adamus',p:'Nonpartisan',d:'Property Assessments Specialist',bio:`A 14-year assessor's office veteran and whistleblower — was one of three employees who sued Jeffrey Prang in 2019 alleging the office gave politically favored property owners illegal tax breaks. In March 2026, a jury awarded him $570,000 in that case. Now running against the very boss he successfully sued, making his campaign the most contentious insider challenge in the race.`},
+{n:'Sandy Sun',p:'Nonpartisan',d:'Certified Appraiser, LA County',bio:`26-year veteran of the LA County Assessor's Office who is cross-trained in both real property and personal property assessments. A repeat candidate — she received 22.5% of the vote in the 2022 race for this same seat. Running again as a certified appraiser insider challenging incumbent Jeffrey Prang.`},
+{n:'Rob Newland',p:'Nonpartisan',d:'Appraiser/Housing Economist',bio:`Real estate appraiser and housing economist since 1998. Wants to use the Assessor's massive property dataset to build a countywide vacant property transparency map and identify illegal short-term rentals. The only non-assessor-office insider in the 2026 race, pitching the role as broader than just tax valuation.`},
+]},
+]},
+
+{section:'JUDICIAL',races:[
+{id:'j2',office:'JUDGE — Superior Court, Office No. 2',jur:'judicial',cx:[
+{n:'Robert S. Draper',p:'Nonpartisan',d:'Judge of the Superior Court (Incumbent)',bio:`Appointed by Governor Jerry Brown in 2012. Currently faces charges from the California Commission on Judicial Performance that could result in his removal from the bench — allegations include racist remarks on the record, sexually inappropriate conversations, and unwanted touching. Has publicly disclosed having Parkinson's disease; a presiding judge determined he was unfit to hear cases, yet he filed to run for reelection.`},
+{n:'Tal K. Valbuena',p:'Nonpartisan',d:'Deputy District Attorney, County of LA',bio:`Immigrant from Karachi, Pakistan who arrived in the U.S. in 2000. Passed the California bar in 2014 and joined the LA County DA's Office in 2016. Sits on the LA County LGBTQ+ Commission, teaches a college course on legal rights, and serves as treasurer of the Southern California chapter of the South Asian Bar Association. Rated "Qualified" by the LA County Bar Association.`},
+]},
+{id:'j14',office:'JUDGE — Superior Court, Office No. 14',jur:'judicial',cx:[
+{n:'Irene Lee',p:'Nonpartisan',d:'Deputy District Attorney, County of LA',bio:`Nearly 14 years as an LA County deputy DA focused on domestic violence and child abuse cases before moving to county counsel's office in Juvenile Dependency Court. Now a Special Assistant to DA Nathan Hochman, running a fentanyl awareness campaign. Rated "Well Qualified" by the bar association. Endorsed by the current DA and two former DAs.`},
+{n:'Angie Chrestides',p:'Nonpartisan',d:'Deputy District Attorney, County of LA',bio:`20-year prosecutor who also worked in Veterans Court and Community Collaborative Court. Her candidacy revived scrutiny of a 2017 murder case in which internal investigations by both the Long Beach Police Department and the DA's Office found she misrepresented facts to the court by falsely accusing two detectives of withholding information.`},
+]},
+{id:'j39',office:'JUDGE — Superior Court, Office No. 39',jur:'judicial',cx:[
+{n:'Binh Q. Dang',p:'Nonpartisan',d:'Deputy Public Defender, County of LA',bio:`Refugee from Vietnam who came to the United States as a child. Has spent nearly 20 years as an LA County Deputy Public Defender, completing more than 100 jury trials and adjudications. His personal experience as a refugee directly shapes his stated commitment to treating every person who appears before the court with dignity and respect. The only listed candidate for this judicial seat.`},
+]},
+{id:'j60',office:'JUDGE — Superior Court, Office No. 60',jur:'judicial',cx:[
+{n:'Ann M. Maurer',p:'Nonpartisan',d:'First Assistant City Attorney, City of Glendale',bio:`Has served as First Assistant City Attorney for Glendale for over three decades, handling the city's most complex and high-stakes litigation as a veteran trial lawyer and public agency advisor. Licensed to practice law for 30 years. The only listed candidate for this judicial seat.`},
+]},
+{id:'j64',office:'JUDGE — Superior Court, Office No. 64',jur:'judicial',cx:[
+{n:'Maria Ghobadi',p:'Nonpartisan',d:'Deputy District Attorney, County of LA',bio:`Prosecutor with 17+ years in the LA DA's Office. Has completed 21 homicide trials, 85 jury trials total, and more than 1,500 preliminary hearings. Took a pay cut to join the LA office at entry level, having previously prosecuted in Northern California. Rated "Well Qualified" by the bar association. Endorsed by over 50 judges, including the supervising judge of the criminal courts.`},
+{n:'Rhonda A. Haymon',p:'Nonpartisan',d:'Deputy Public Defender, County of LA',bio:`Public defender for over 26 years, starting at the Orange County Public Defender's Office before moving to LA County. Earned her law degree from Willamette University and her bachelor's from Tuskegee University. Has tried more than 100 felony and misdemeanor jury trials, defending clients in cases ranging from petty theft to homicide.`},
+{n:'Francisco Amador',p:'Nonpartisan',d:'Attorney at Law',bio:`Marine Corps veteran who now practices law. Running for judicial office to bring a public service ethic to the bench. Rated "Not Qualified" by the LA County Bar Association's evaluation committee.`},
+]},
+{id:'j65',office:'JUDGE — Superior Court, Office No. 65',jur:'judicial',cx:[
+{n:'Anna Slotky Reitano',p:'Nonpartisan',d:'Deputy County Counsel, County of LA',bio:`Before law school, had a notable childhood acting career — played Ruth Ann Torkelson in the NBC sitcom "The Torkelsons" (1991–1992) and appeared in "Home Alone" (1990) and "Home Alone 2: Lost in New York" (1992). Now works as a Deputy County Counsel in LA County's Justice and Safety Division. This is at least her second run for a Superior Court seat, having lost a 2022 general election race for a different office.`},
+{n:'Justin Allen Clayton',p:'Nonpartisan',d:'Deputy Public Defender, County of LA',bio:`14-year public defender and current Deputy in Charge of the Inglewood branch of the LA County Public Defender's Office, where he supervises attorneys and trains new lawyers. Has completed dozens of trials, including three life cases, and appeared in more than 1,000 adult matters. Backed by the Beach Cities Democrats.`},
+{n:'Samuel Wolloch Krause',p:'Nonpartisan',d:'Attorney/Legal Auditor',bio:`ERISA and employee benefits specialist who worked at elite national firms including Skadden Arps, Hogan & Hartson, and Crowell & Moring. Brings nearly three decades of corporate law experience to a race dominated by criminal practitioners. His candidacy drew controversy when the Registrar-Recorder initially approved — then revoked — his proposed ballot designation of "Attorney/Temporary Judge" because use of the word "Judge" is prohibited under California election rules.`},
+{n:'Chellee G. Jimenez',p:'Nonpartisan',d:'Attorney',bio:`Family law specialist and managing attorney of her own firm who has taken hundreds of cases from start to finish and tried more than 300 matters to decision — breadth of courtroom experience that is relatively unusual among private-practice judicial candidates. Bar evaluations describe her as intelligent, articulate, and possessing an ideal judicial temperament.`},
+]},
+{id:'j66',office:'JUDGE — Superior Court, Office No. 66',jur:'judicial',cx:[
+{n:'Ben Forer',p:'Nonpartisan',d:'Deputy District Attorney, County of LA',bio:`Veteran cybercrime prosecutor in the DA's High-Tech Crimes Unit. Simultaneously a professor of Cyber and Privacy Law at USC's Viterbi School of Engineering and the author of two legal textbooks on privacy and cyber law. Also an ordained rabbi — bringing one of the most uniquely diverse profiles in the race: prosecutor, academic, and religious leader.`},
+{n:'Cheryl C. Turner',p:'Nonpartisan',d:'Attorney at Law',bio:`Private practitioner handling employment litigation, banking and finance cases, and criminal defense. Also serves as a temporary Superior Court judge — giving her actual bench experience ahead of this run for a permanent seat. Rated "Qualified" by the LA County Bar Association.`},
+]},
+{id:'j81',office:'JUDGE — Superior Court, Office No. 81',jur:'judicial',cx:[
+{n:'David Walgren',p:'Nonpartisan',d:'Judge of the Superior Court (Incumbent)',bio:`Best known for securing the involuntary manslaughter conviction of Dr. Conrad Murray — the physician who treated Michael Jackson with fatal doses of propofol — in one of the most watched celebrity criminal trials in recent memory. Spent 16 years as an LA County deputy DA before being appointed to the Superior Court in 2012. Rated "Exceptionally Well Qualified" by the bar association — the highest rating available.`},
+{n:'Dan Kapelovitz',p:'Nonpartisan',d:'Attorney/Experimental Filmmaker',bio:`Before law school, was Features Editor of Hustler Magazine and wrote for the LA Weekly and OC Weekly. Graduated in the top ten of his UCLA law class and clerked for a federal judge. An award-winning experimental filmmaker who spent 20 years completing a project merging all three Amy Fisher made-for-TV movies into one meta-drama. This is at least his fourth run for office — after failed bids for Governor (2021 recall), State AG (2022), and LA County DA (2024).`},
+]},
+{id:'j87',office:'JUDGE — Superior Court, Office No. 87',jur:'judicial',cx:[
+{n:'Sharez Sanders Gordon',p:'Nonpartisan',d:'Deputy City Attorney, City of LA',bio:`Former elementary school teacher in Watts who transitioned to law. LA Deputy City Attorney for 25+ years. Helped launch the Neighborhood Prosecutor Program in 2002, directed the city attorney's prostitution diversion project, and led the Neighborhood School Safety Program for a decade. Also served as a temporary judge and mock trial judge for student competitions.`},
+{n:'David Dejute',p:'Nonpartisan',d:'Law Professor/Attorney',bio:`Harvard Law graduate and former Assistant U.S. Attorney. Argued before the Ninth Circuit in the "Drake v. Obama" case, defending the government against birther claims about Obama's presidential eligibility. Now directs the Pepperdine Caruso Disaster Relief Clinic and is of counsel at Michelman & Robinson. Brings 30+ years of trial and appellate experience to this judicial campaign.`},
+{n:'Anthony (A.J.) Bayne',p:'Nonpartisan',d:'Deputy Public Defender, County of LA',bio:`Deputy public defender for 25+ years, spending 19 of those years at the Compton Courthouse handling severe felonies and supervising new misdemeanor attorneys. Has tried more than 100 jury trials over his career. Represents the experienced public-defender contingent in a three-way race that also includes a law professor and a career city attorney.`},
+]},
+]},
+];
+
+/* helpers */
+const allRaces=()=>BALLOT.flatMap(s=>s.races);
+const totalRaces=()=>allRaces().length;
+const esc=s=>s.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+const bioKey=s=>`bio-${s.replace(/[^a-z0-9]/gi,'_').toLowerCase()}`;
+const sel={};
+let filter='All';
+
+function jurClass(j){return {state:'j-state',city:'j-city',county:'j-county',judicial:'j-judicial'}[j]||'j-state'}
+function jurLabel(j){return {state:'STATE',city:'CITY/LOCAL',county:'COUNTY',judicial:'JUDICIAL'}[j]||'STATE'}
+
+/* RENDER */
+function render(){
+  openBio=null;
+  const main=document.getElementById('main');
+  main.innerHTML='';
+  BALLOT.forEach(section=>{
+    const sh=document.createElement('div');
+    sh.className='sec-hdr';
+    sh.innerHTML=`<span class="sec-title">${section.section}</span><div class="sec-line"></div>`;
+    main.appendChild(sh);
+    section.races.forEach(race=>main.appendChild(buildCard(race)));
+  });
+  applyFilter();updateProg();updateSB();
+}
+
+function buildCard(race){
+  const card=document.createElement('div');
+  card.className='card'+(sel[race.id]?' sel':'');
+  card.id='card-'+race.id;
+  const uncontested=race.cx.length===1;
+  card.innerHTML=`
+    <div class="card-hdr">
+      <div class="card-left">
+        <span class="jtag ${jurClass(race.jur)}">${jurLabel(race.jur)}</span>
+        <span class="card-title">${race.office}</span>
+      </div>
+      <div class="card-right">
+        <span class="c-count">${race.cx.length} candidate${race.cx.length!==1?'s':''}</span>
+        <button class="btn-clr" onclick="clearRace('${race.id}')">Clear</button>
+      </div>
+    </div>
+    <div class="clist" id="list-${race.id}">
+      ${race.cx.map(c=>rowHTML(race.id,c)).join('')}
+    </div>
+    ${uncontested?`<div class="uncontested">↳ Uncontested — only candidate listed on ballot</div>`:''}
+    ${race.note?`<div class="race-note">↳ ${race.note}</div>`:''}
+  `;
+  return card;
+}
+
+function rowHTML(rid,c){
+  const party=P[c.p]||P['No Party Preference'];
+  const on=sel[rid]===c.n;
+  const bid=`${rid}-${bioKey(c.n)}`;
+  const dHtml=c.d?`<span class="cdesc" title="${c.d}">${c.d}</span>`:'';
+  const flagHtml=c.flag?`<span class="cflag" title="${c.flag}">⚠</span>`:'';
+  const nameHtml=c.bio
+    ?`<span class="cname-link" onclick="toggleBio(event,'${bid}')">${c.n} <span class="bio-chev" id="chev-${bid}">▾</span></span>`
+    :`<span class="cname">${c.n}</span>`;
+  const bioHtml=c.bio
+    ?`<div class="bio-drawer" id="${bid}"><div class="bio-inner">${c.bio}</div></div>`
+    :'';
+  return `<div class="cwrap">
+    <div class="crow${on?' on':''}" data-rid="${rid}" data-name="${esc(c.n)}" data-party="${c.p}" onclick="pick('${rid}','${esc(c.n)}')">
+      <div class="radio"></div>
+      ${nameHtml}
+      <span class="pbadge" style="color:${party.c};background:${party.bg}">${party.s}</span>
+      ${dHtml}${flagHtml}
+    </div>${bioHtml}
+  </div>`;
+}
+
+/* TOGGLE BIO */
+function toggleBio(e,bid){
+  e.stopPropagation();
+  const drawer=document.getElementById(bid);
+  if(!drawer)return;
+  if(openBio&&openBio!==bid){
+    const prev=document.getElementById(openBio);
+    if(prev){prev.classList.remove('open');}
+    const pc=document.getElementById('chev-'+openBio);
+    if(pc)pc.style.transform='';
+  }
+  const isOpen=drawer.classList.contains('open');
+  drawer.classList.toggle('open',!isOpen);
+  const chev=document.getElementById('chev-'+bid);
+  if(chev)chev.style.transform=isOpen?'':'rotate(180deg)';
+  openBio=isOpen?null:bid;
+}
+
+/* SELECTION */
+function pick(rid,name){
+  if(sel[rid]===name){delete sel[rid];}else{sel[rid]=name;}
+  const list=document.getElementById('list-'+rid);
+  list.querySelectorAll('.crow').forEach(r=>r.classList.toggle('on',r.dataset.name===sel[rid]));
+  document.getElementById('card-'+rid).classList.toggle('sel',!!sel[rid]);
+  updateProg();updateSB();
+}
+
+function clearRace(rid){
+  delete sel[rid];
+  const list=document.getElementById('list-'+rid);
+  if(list)list.querySelectorAll('.crow').forEach(r=>r.classList.remove('on'));
+  const card=document.getElementById('card-'+rid);
+  if(card)card.classList.remove('sel');
+  updateProg();updateSB();
+}
+
+function clearAll(){Object.keys(sel).forEach(k=>delete sel[k]);render();}
+
+/* FILTER */
+function setFilter(tab){
+  if(openBio){const p=document.getElementById(openBio);if(p)p.classList.remove('open');const pc=document.getElementById('chev-'+openBio);if(pc)pc.style.transform='';openBio=null;}
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  tab.classList.add('on');filter=tab.dataset.f;applyFilter();
+}
+
+function applyFilter(){
+  BALLOT.forEach(section=>{
+    section.races.forEach(race=>{
+      const card=document.getElementById('card-'+race.id);if(!card)return;
+      const list=document.getElementById('list-'+race.id);
+      const wraps=[...list.querySelectorAll('.cwrap')];
+      if(filter==='All'){
+        card.classList.remove('hidden');
+        wraps.forEach(w=>w.classList.remove('dimmed'));
+        wraps.sort((a,b)=>{
+          const an=a.querySelector('.crow').dataset.name;
+          const bn=b.querySelector('.crow').dataset.name;
+          return race.cx.findIndex(c=>c.n===an)-race.cx.findIndex(c=>c.n===bn);
+        });
+        wraps.forEach(w=>list.appendChild(w));
+      }else{
+        const has=race.cx.some(c=>c.p===filter);
+        card.classList.toggle('hidden',!has);if(!has)return;
+        wraps.forEach(w=>w.classList.toggle('dimmed',w.querySelector('.crow').dataset.party!==filter));
+        wraps.sort((a,b)=>{
+          const am=a.querySelector('.crow').dataset.party===filter?0:1;
+          const bm=b.querySelector('.crow').dataset.party===filter?0:1;
+          if(am!==bm)return am-bm;
+          const an=a.querySelector('.crow').dataset.name;
+          const bn=b.querySelector('.crow').dataset.name;
+          return race.cx.findIndex(c=>c.n===an)-race.cx.findIndex(c=>c.n===bn);
+        });
+        wraps.forEach(w=>list.appendChild(w));
+      }
+    });
+  });
+}
+
+/* PROGRESS */
+function updateProg(){
+  const total=totalRaces(),done=Object.keys(sel).length;
+  document.getElementById('pf').style.width=(total>0?done/total*100:0)+'%';
+  document.getElementById('pl').textContent=`${done} of ${total} filled`;
+}
+
+/* SIDEBAR */
+function updateSB(){
+  const scroll=document.getElementById('sb-scroll');
+  const empty=document.getElementById('sb-empty');
+  const ct=document.getElementById('sb-ct');
+  const count=Object.keys(sel).length;
+  ct.textContent=`${count} selection${count!==1?'s':''}`;
+  scroll.querySelectorAll('.sb-section,.sb-item').forEach(e=>e.remove());
+  if(count===0){empty.style.display='block';return;}
+  empty.style.display='none';
+  BALLOT.forEach(section=>{
+    let added=false;
+    section.races.forEach(race=>{
+      if(!sel[race.id])return;
+      if(!added){
+        const se=document.createElement('div');se.className='sb-section';se.textContent=section.section;scroll.appendChild(se);added=true;
+      }
+      const cand=race.cx.find(c=>c.n===sel[race.id]);
+      const party=P[cand?.p]||P['No Party Preference'];
+      const item=document.createElement('div');item.className='sb-item';
+      item.onclick=()=>document.getElementById('card-'+race.id)?.scrollIntoView({behavior:'smooth',block:'center'});
+      item.innerHTML=`<span class="sb-office">${race.office}</span><span class="sb-name">${sel[race.id]}</span><span class="sb-party" style="color:${party.c}">${party.s} &mdash; ${cand?.p||''}</span>`;
+      scroll.appendChild(item);
+    });
+  });
+}
+
+function toggleSB(){document.getElementById('sb').classList.toggle('open');}
+
+/* MEASURE */
+function measure(){
+  const h=document.getElementById('hdr').offsetHeight;
+  document.documentElement.style.setProperty('--hh',h+'px');
+  const sb=document.getElementById('sb');sb.style.top=h+'px';sb.style.height=`calc(100vh - ${h}px)`;
+}
+
+render();measure();window.addEventListener('resize',measure);
+</script>
+
+<!-- BALLOT WIZARD OVERLAY -->
+<div class="wz-backdrop" id="wz-backdrop" style="display:none" role="dialog" aria-modal="true" aria-label="Ballot Wizard">
+  <div class="wz-card" id="wz-card">
+    <div class="wz-head">
+      <span class="wz-title" id="wz-ht">⚡ Ballot Wizard</span>
+      <button class="wz-close" onclick="wzClose()" aria-label="Close wizard">✕</button>
+    </div>
+    <div class="wz-prog-wrap" id="wz-pw">
+      <div class="wz-prog-bar"><div class="wz-prog-fill" id="wz-pf"></div></div>
+      <div class="wz-step-lbl" id="wz-sl">Step 1 of 10</div>
+    </div>
+    <div class="wz-body" id="wz-body"></div>
+    <div class="wz-foot" id="wz-foot">
+      <button class="btn" id="wz-prev" onclick="wzPrev()">← Back</button>
+      <button class="btn btn-p" id="wz-next" onclick="wzNext()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   BALLOT WIZARD
+   ══════════════════════════════════════════════════════ */
+
+/* ── Candidate score lookup ─────────────────────────── */
+const SCORES={
+/* GOVERNOR */
+'Tom Steyer':              {ideology:2.0,tags:['climate','housing','labor'],           incumbent:false,judgeType:null},
+'Eric Swalwell':           {ideology:2.3,tags:['immigration','reform','publicsafety'], incumbent:false,judgeType:null},
+'Katie Porter':            {ideology:1.9,tags:['fiscal','healthcare','reform'],         incumbent:false,judgeType:null},
+'Antonio Villaraigosa':    {ideology:2.8,tags:['housing','publicsafety','education'],   incumbent:false,judgeType:null},
+'Xavier Becerra':          {ideology:2.1,tags:['immigration','healthcare','labor'],     incumbent:false,judgeType:null},
+'Tony K. Thurmond':        {ideology:1.9,tags:['education','healthcare','fiscal'],      incumbent:false,judgeType:null},
+'Matt Mahan':              {ideology:2.6,tags:['housing','fiscal','tech'],              incumbent:false,judgeType:null},
+'Chad Bianco':             {ideology:4.8,tags:['publicsafety','immigration','fiscal'],  incumbent:false,judgeType:null},
+'Steve Hilton':            {ideology:4.5,tags:['fiscal','housing','climate'],           incumbent:false,judgeType:null},
+'Leo Samuel Zacky':        {ideology:4.0,tags:['fiscal','housing','labor'],             incumbent:false,judgeType:null},
+'Matthew Chase Levy':      {ideology:2.4,tags:['climate','tech','fiscal'],              incumbent:false,judgeType:null},
+'Ramsey Robinson':         {ideology:1.0,tags:['healthcare','labor','housing'],         incumbent:false,judgeType:null},
+'Tom Woodard':             {ideology:5.0,tags:['fiscal','tech','housing'],              incumbent:false,judgeType:null},
+'Tim Nelson':              {ideology:4.2,tags:['immigration','fiscal','publicsafety'],  incumbent:false,judgeType:null},
+'Carolina Buhler':         {ideology:1.5,tags:['climate','housing','immigration'],      incumbent:false,judgeType:null},
+'Christine R. Sarmiento':  {ideology:2.5,tags:['healthcare','immigration','labor'],     incumbent:false,judgeType:null},
+'Jon Henderson':           {ideology:3.0,tags:['fiscal','housing','climate'],           incumbent:false,judgeType:null},
+'Nancy D. Young':          {ideology:3.0,tags:['education','housing','labor'],          incumbent:false,judgeType:null},
+'Naomi Bar-Lev':           {ideology:4.5,tags:['fiscal','housing','reform'],            incumbent:false,judgeType:null},
+'Scott P. Shields':        {ideology:3.0,tags:['fiscal','reform','housing'],            incumbent:false,judgeType:null},
+'Frederic C. Schultz':     {ideology:1.8,tags:['healthcare','housing','immigration'],   incumbent:false,judgeType:null},
+'Reza Safaeabad':          {ideology:4.0,tags:['publicsafety','fiscal','tech'],         incumbent:false,judgeType:null},
+'Sam Sandak':              {ideology:3.0,tags:['fiscal','reform','housing'],            incumbent:false,judgeType:null},
+'Gretha Solórzano':        {ideology:3.5,tags:['climate','tech','fiscal'],              incumbent:false,judgeType:null},
+'James Athans Jr.':        {ideology:4.0,tags:['housing','fiscal','publicsafety'],      incumbent:false,judgeType:null},
+'Larry Azevedo':           {ideology:2.5,tags:['housing','immigration','labor'],        incumbent:false,judgeType:null},
+'Mohammad Arif':           {ideology:2.2,tags:['immigration','labor','housing'],        incumbent:false,judgeType:null},
+'Akinyemi Agbede':         {ideology:2.3,tags:['education','tech','fiscal'],            incumbent:false,judgeType:null},
+'Don Grasty':              {ideology:2.5,tags:['education','labor','housing'],          incumbent:false,judgeType:null},
+'Don J. Grundmann':        {ideology:5.0,tags:['immigration','fiscal','publicsafety'],  incumbent:false,judgeType:null},
+'Dawit Kelel':             {ideology:3.5,tags:['housing','fiscal','reform'],            incumbent:false,judgeType:null},
+'Anne Komarovsik':         {ideology:3.0,tags:['fiscal','housing','tech'],              incumbent:false,judgeType:null},
+'Gary Howard Kidgell':     {ideology:2.8,tags:['housing','fiscal','labor'],             incumbent:false,judgeType:null},
+'Sophia Egum-A-Sam':       {ideology:2.5,tags:['housing','labor','education'],          incumbent:false,judgeType:null},
+'Mauro Alberto Orozco':    {ideology:3.0,tags:['immigration','housing','publicsafety'], incumbent:false,judgeType:null},
+'Barack D. Obama Shaw':    {ideology:2.5,tags:['labor','housing','education'],          incumbent:false,judgeType:null},
+'Margaret Trowe':          {ideology:1.0,tags:['labor','housing','healthcare'],         incumbent:false,judgeType:null},
+'Thunder Parley':          {ideology:3.2,tags:['fiscal','housing','labor'],             incumbent:false,judgeType:null},
+'Erin "Zez" Zezulak':     {ideology:3.0,tags:['healthcare','climate','education'],     incumbent:false,judgeType:null},
+'David Zickfoose':         {ideology:4.0,tags:['publicsafety','fiscal','housing'],      incumbent:false,judgeType:null},
+'Lewis Herms':             {ideology:4.5,tags:['fiscal','reform','housing'],            incumbent:false,judgeType:null},
+'Rafael M. Hernandez':     {ideology:4.0,tags:['fiscal','publicsafety','labor'],        incumbent:false,judgeType:null},
+'Joseph Cabrera':          {ideology:2.8,tags:['housing','fiscal','labor'],             incumbent:false,judgeType:null},
+'Elaine Colotti':          {ideology:3.2,tags:['fiscal','housing','tech'],              incumbent:false,judgeType:null},
+'Joel E. Jacob':           {ideology:2.4,tags:['tech','fiscal','housing'],              incumbent:false,judgeType:null},
+'Max Fomio':               {ideology:3.2,tags:['housing','publicsafety','immigration'], incumbent:false,judgeType:null},
+'Lukasz Adam Filinski':    {ideology:3.5,tags:['fiscal','reform','housing'],            incumbent:false,judgeType:null},
+'Serge Fiankan':           {ideology:3.0,tags:['housing','immigration','fiscal'],       incumbent:false,judgeType:null},
+'Leo Naranjo IV':          {ideology:4.2,tags:['fiscal','publicsafety','immigration'],  incumbent:false,judgeType:null},
+'Amanda Martin':           {ideology:3.0,tags:['housing','fiscal','reform'],            incumbent:false,judgeType:null},
+'Brent Maupin':            {ideology:3.2,tags:['housing','fiscal','reform'],            incumbent:false,judgeType:null},
+'Daniel Mercure':          {ideology:3.5,tags:['fiscal','reform','housing'],            incumbent:false,judgeType:null},
+'Betty T. Yee':            {ideology:2.3,tags:['fiscal','education','healthcare'],      incumbent:false,judgeType:null},
+'Alicia Olivia Lapp':      {ideology:3.0,tags:['education','reform','housing'],         incumbent:false,judgeType:null},
+'Duane Terrence Loynes Jr.':{ideology:3.5,tags:['labor','housing','healthcare'],        incumbent:false,judgeType:null},
+'Randeep S. Dhillon':      {ideology:4.0,tags:['fiscal','housing','immigration'],       incumbent:false,judgeType:null},
+'Livingforged Andcountry Demott':{ideology:3.5,tags:['fiscal','reform','housing'],      incumbent:false,judgeType:null},
+'Patricia De Luca Basualdo':{ideology:4.0,tags:['fiscal','housing','reform'],           incumbent:false,judgeType:null},
+'Louis A. De Barricua':    {ideology:2.5,tags:['housing','education','labor'],          incumbent:false,judgeType:null},
+'Raju Rab':                {ideology:2.2,tags:['education','immigration','labor'],      incumbent:false,judgeType:null},
+'Saitoh Rao':              {ideology:2.3,tags:['education','fiscal','tech'],            incumbent:false,judgeType:null},
+/* LT GOV */
+'Josh Fryday':             {ideology:2.2,tags:['climate','labor','education'],          incumbent:false,judgeType:null},
+'Michael Tubbs':           {ideology:1.8,tags:['labor','housing','education'],          incumbent:false,judgeType:null},
+'Fiona Ma':                {ideology:2.5,tags:['fiscal','housing','labor'],             incumbent:false,judgeType:null},
+'Janelle Kellman':         {ideology:1.9,tags:['climate','fiscal','housing'],           incumbent:false,judgeType:null},
+'Abdur Rahman Sikder':     {ideology:1.7,tags:['education','healthcare','tech'],        incumbent:false,judgeType:null},
+'Tim Myers':               {ideology:2.8,tags:['labor','education','fiscal'],           incumbent:false,judgeType:null},
+'Jeyson Lopez':            {ideology:2.2,tags:['education','immigration','labor'],      incumbent:false,judgeType:null},
+'Oliver Ma':               {ideology:1.5,tags:['immigration','housing','labor'],        incumbent:false,judgeType:null},
+'Gloria Romero':           {ideology:3.5,tags:['education','fiscal','publicsafety'],    incumbent:false,judgeType:null},
+'Ebie Lynch':              {ideology:4.0,tags:['healthcare','education','publicsafety'],incumbent:false,judgeType:null},
+'Rakesh Christian':        {ideology:3.2,tags:['fiscal','housing','reform'],            incumbent:false,judgeType:null},
+'Sean Collinson':          {ideology:3.0,tags:['reform','fiscal','housing'],            incumbent:false,judgeType:null},
+'David Collenberg':        {ideology:4.0,tags:['fiscal','housing','labor'],             incumbent:false,judgeType:null},
+'David Fennell':           {ideology:3.5,tags:['fiscal','reform','tech'],               incumbent:false,judgeType:null},
+'Alice Stix':              {ideology:1.0,tags:['healthcare','immigration','labor'],     incumbent:false,judgeType:null},
+'Skip Skelton':            {ideology:4.0,tags:['fiscal','tech','publicsafety'],         incumbent:false,judgeType:null},
+/* SOS */
+'Shirley N. Weber':        {ideology:2.0,tags:['education','reform','labor'],           incumbent:true, judgeType:null},
+'Donald P. (Don) Wagner':  {ideology:4.5,tags:['reform','publicsafety','fiscal'],       incumbent:false,judgeType:null},
+'Michael Feinstein':       {ideology:1.5,tags:['reform','climate','labor'],             incumbent:false,judgeType:null},
+'Gary N. Blenner':         {ideology:1.5,tags:['reform','education','climate'],         incumbent:false,judgeType:null},
+/* CONTROLLER */
+'Malia M. Cohen':          {ideology:2.0,tags:['fiscal','labor','housing'],             incumbent:true, judgeType:null},
+'Herb W. Morgan':          {ideology:4.0,tags:['fiscal','tech','reform'],               incumbent:false,judgeType:null},
+'Meghann Adams':           {ideology:1.2,tags:['fiscal','labor','healthcare'],          incumbent:false,judgeType:null},
+/* TREASURER */
+'Eleni Kounalakis':        {ideology:2.3,tags:['fiscal','climate','housing'],           incumbent:false,judgeType:null},
+'Anna M. Caballero':       {ideology:2.5,tags:['fiscal','labor','housing'],             incumbent:false,judgeType:null},
+'Tony Vazquez':            {ideology:2.2,tags:['fiscal','labor','immigration'],         incumbent:false,judgeType:null},
+'Jennifer Hawks':          {ideology:4.0,tags:['fiscal','reform','tech'],               incumbent:false,judgeType:null},
+'David Serpa':             {ideology:4.2,tags:['fiscal','publicsafety','housing'],      incumbent:false,judgeType:null},
+'Glenn Turner':            {ideology:1.3,tags:['fiscal','climate','labor'],             incumbent:false,judgeType:null},
+/* AG */
+'Rob Bonta':               {ideology:1.8,tags:['immigration','reform','labor'],         incumbent:true, judgeType:null},
+'Michael E. Gates':        {ideology:4.5,tags:['publicsafety','immigration','reform'],  incumbent:false,judgeType:null},
+'Marjorie Mikels':         {ideology:1.2,tags:['climate','reform','immigration'],       incumbent:false,judgeType:null},
+/* INSURANCE */
+'Ben Allen':               {ideology:1.9,tags:['climate','healthcare','fiscal'],        incumbent:false,judgeType:null},
+'Jane Kim':                {ideology:1.5,tags:['healthcare','labor','housing'],         incumbent:false,judgeType:null},
+'Patrick Wolff':           {ideology:2.2,tags:['fiscal','healthcare','reform'],         incumbent:false,judgeType:null},
+'Steven Craig Bradford':   {ideology:2.0,tags:['education','healthcare','reform'],      incumbent:false,judgeType:null},
+'Stacy A. Korsgaden':      {ideology:4.2,tags:['fiscal','healthcare','reform'],         incumbent:false,judgeType:null},
+'Eric Thor Aarnio':        {ideology:4.0,tags:['fiscal','healthcare','housing'],        incumbent:false,judgeType:null},
+'Sean Lee':                {ideology:4.0,tags:['fiscal','tech','healthcare'],           incumbent:false,judgeType:null},
+'Robert P. Howell':        {ideology:4.0,tags:['fiscal','healthcare','tech'],           incumbent:false,judgeType:null},
+'Merritt Farren':          {ideology:3.5,tags:['healthcare','housing','fiscal'],        incumbent:false,judgeType:null},
+'Eduardo "Lalo" Vargas':   {ideology:1.0,tags:['healthcare','labor','education'],       incumbent:false,judgeType:null},
+'Keith W. Davis':          {ideology:3.8,tags:['fiscal','healthcare','reform'],         incumbent:false,judgeType:null},
+/* BOE */
+'Mike Gipson':             {ideology:2.0,tags:['fiscal','labor','housing'],             incumbent:false,judgeType:null},
+'Yvonne Ytu':              {ideology:2.3,tags:['fiscal','housing','immigration'],       incumbent:false,judgeType:null},
+'Zhijing Liu':             {ideology:2.5,tags:['fiscal','tech','housing'],              incumbent:false,judgeType:null},
+'Rudy Bermudez':           {ideology:2.4,tags:['fiscal','reform','publicsafety'],       incumbent:false,judgeType:null},
+'Baru Alejandro Sanchez':  {ideology:2.5,tags:['fiscal','housing','labor'],             incumbent:false,judgeType:null},
+'Samuel P. Sukaton':       {ideology:1.7,tags:['labor','education','fiscal'],           incumbent:false,judgeType:null},
+'Stephan Hohl':            {ideology:4.0,tags:['fiscal','reform','publicsafety'],       incumbent:false,judgeType:null},
+'Carlo Basael':            {ideology:4.0,tags:['fiscal','reform','housing'],            incumbent:false,judgeType:null},
+'Rey Portela':             {ideology:4.0,tags:['fiscal','housing','labor'],             incumbent:false,judgeType:null},
+'Marje Manvel':            {ideology:3.0,tags:['fiscal','reform','housing'],            incumbent:false,judgeType:null},
+/* SPI */
+'Richard Barrera':         {ideology:1.8,tags:['education','labor','housing'],          incumbent:false,judgeType:null},
+'Nichelle M. Henderson':   {ideology:2.0,tags:['education','labor','housing'],          incumbent:false,judgeType:null},
+'Anthony Rendon':          {ideology:2.2,tags:['education','fiscal','housing'],         incumbent:false,judgeType:null},
+'Al Muratsuchi':           {ideology:2.3,tags:['education','fiscal','reform'],          incumbent:false,judgeType:null},
+'Josh Newman':             {ideology:2.3,tags:['education','labor','reform'],           incumbent:false,judgeType:null},
+'Sonja Shaw':              {ideology:4.0,tags:['education','reform','publicsafety'],    incumbent:false,judgeType:null},
+'Gus Mattammal':           {ideology:3.0,tags:['education','fiscal','reform'],          incumbent:false,judgeType:null},
+'Frank Lara':              {ideology:1.0,tags:['education','labor','immigration'],      incumbent:false,judgeType:null},
+'Ainye Long':              {ideology:2.2,tags:['education','labor','reform'],           incumbent:false,judgeType:null},
+'Wendy Castaneda Leal':    {ideology:2.5,tags:['education','immigration','labor'],      incumbent:false,judgeType:null},
+/* ASSEMBLY 40 */
+'Pilar Schiavo':           {ideology:1.9,tags:['healthcare','labor','education'],       incumbent:true, judgeType:null},
+'Rickey Tracy Hayes II':   {ideology:3.8,tags:['publicsafety','fiscal','labor'],        incumbent:false,judgeType:null},
+'Andreas Farmakalidis':    {ideology:3.8,tags:['education','fiscal','housing'],         incumbent:false,judgeType:null},
+'Elizabeth Wong Ahlers':   {ideology:4.0,tags:['education','fiscal','publicsafety'],   incumbent:false,judgeType:null},
+/* US REP 27 */
+'George Whitesides':       {ideology:2.5,tags:['tech','climate','fiscal'],              incumbent:true, judgeType:null},
+'Jason Gibbs':             {ideology:4.0,tags:['fiscal','publicsafety','tech'],         incumbent:false,judgeType:null},
+'Roberto Ramos':           {ideology:2.2,tags:['labor','fiscal','reform'],              incumbent:false,judgeType:null},
+'Caleb Norwood':           {ideology:1.8,tags:['reform','labor','housing'],             incumbent:false,judgeType:null},
+/* SHERIFF */
+'Robert G. Luna':          {ideology:2.5,tags:['publicsafety','reform','labor'],        incumbent:true, judgeType:null},
+'Alex Villanueva':         {ideology:4.5,tags:['publicsafety','immigration','fiscal'],  incumbent:false,judgeType:null},
+'Andre N. White':          {ideology:2.0,tags:['publicsafety','reform','labor'],        incumbent:false,judgeType:null},
+'Karla Carranza':          {ideology:3.0,tags:['publicsafety','reform','labor'],        incumbent:false,judgeType:null},
+'Brendan Corbett':         {ideology:3.5,tags:['publicsafety','reform','fiscal'],       incumbent:false,judgeType:null},
+'Eric Strong':             {ideology:3.2,tags:['publicsafety','labor','fiscal'],        incumbent:false,judgeType:null},
+'Mike Bornman':            {ideology:3.0,tags:['publicsafety','reform','labor'],        incumbent:false,judgeType:null},
+'Oscar Antonio Martinez':  {ideology:3.0,tags:['publicsafety','tech','reform'],         incumbent:false,judgeType:null},
+/* ASSESSOR */
+'Jeffrey Prang':           {ideology:2.5,tags:['fiscal','housing','reform'],            incumbent:true, judgeType:null},
+'Stephen A. Adamus':       {ideology:2.8,tags:['fiscal','reform','housing'],            incumbent:false,judgeType:null},
+'Sandy Sun':               {ideology:2.5,tags:['fiscal','housing','labor'],             incumbent:false,judgeType:null},
+'Rob Newland':             {ideology:2.8,tags:['housing','fiscal','tech'],              incumbent:false,judgeType:null},
+/* JUDICIAL */
+'Robert S. Draper':        {ideology:3.0,tags:['reform'],incumbent:true, judgeType:'prosecution',misconduct:true},
+'Tal K. Valbuena':         {ideology:2.5,tags:['reform','labor'],                       incumbent:false,judgeType:'prosecution'},
+'Irene Lee':               {ideology:3.0,tags:['prosecution','reform'],                 incumbent:false,judgeType:'prosecution'},
+'Angie Chrestides':        {ideology:3.0,tags:['prosecution'],                          incumbent:false,judgeType:'prosecution'},
+'Binh Q. Dang':            {ideology:2.0,tags:['reform'],                               incumbent:false,judgeType:'defense'},
+'Ann M. Maurer':           {ideology:3.0,tags:['reform'],                               incumbent:false,judgeType:'civil'},
+'Maria Ghobadi':           {ideology:3.0,tags:['prosecution','reform'],                 incumbent:false,judgeType:'prosecution'},
+'Rhonda A. Haymon':        {ideology:2.5,tags:['reform'],                               incumbent:false,judgeType:'defense'},
+'Francisco Amador':        {ideology:3.5,tags:['reform'],                               incumbent:false,judgeType:'civil'},
+'Anna Slotky Reitano':     {ideology:2.5,tags:['reform'],                               incumbent:false,judgeType:'civil'},
+'Justin Allen Clayton':    {ideology:2.0,tags:['reform','labor'],                       incumbent:false,judgeType:'defense'},
+'Samuel Wolloch Krause':   {ideology:3.2,tags:['fiscal'],                               incumbent:false,judgeType:'civil'},
+'Chellee G. Jimenez':      {ideology:3.0,tags:['reform'],                               incumbent:false,judgeType:'civil'},
+'Ben Forer':               {ideology:3.0,tags:['prosecution','tech'],                   incumbent:false,judgeType:'prosecution'},
+'Cheryl C. Turner':        {ideology:3.0,tags:['reform'],                               incumbent:false,judgeType:'civil'},
+'David Walgren':           {ideology:3.0,tags:['prosecution','reform'],                 incumbent:true, judgeType:'prosecution'},
+'Dan Kapelovitz':          {ideology:2.5,tags:['reform'],                               incumbent:false,judgeType:'defense'},
+'Sharez Sanders Gordon':   {ideology:2.5,tags:['reform','education','labor'],           incumbent:false,judgeType:'civil'},
+'David Dejute':            {ideology:3.0,tags:['prosecution','reform'],                 incumbent:false,judgeType:'prosecution'},
+'Anthony (A.J.) Bayne':    {ideology:2.5,tags:['reform','labor'],                       incumbent:false,judgeType:'defense'},
+};
+
+/* ── Wizard Questions ───────────────────────────────── */
+const WQ=[
+{id:'identity',q:'How would you describe your political outlook?',sub:'This sets your baseline — issue answers will refine it.',opts:[
+  {k:'A',l:'Very progressive / democratic socialist',  d:'Strong government role, wealth redistribution, Medicare for All',ideology:1.0,delta:0,tags:[],jp:'defense'},
+  {k:'B',l:'Liberal Democrat',                         d:'Strong social programs, climate action, reproductive rights',  ideology:1.8,delta:0,tags:[],jp:'defense'},
+  {k:'C',l:'Moderate / independent',                   d:'Pragmatic solutions across party lines, fiscal responsibility', ideology:3.0,delta:0,tags:[],jp:'neutral'},
+  {k:'D',l:'Conservative Republican',                  d:'Limited government, lower taxes, strong law enforcement',      ideology:4.2,delta:0,tags:[],jp:'prosecution'},
+  {k:'E',l:'Very conservative / libertarian',          d:'Minimal government, maximum individual liberty',               ideology:5.0,delta:0,tags:[],jp:'prosecution'},
+]},
+{id:'housing',q:"On California's housing crisis, which approach do you favor?",sub:null,opts:[
+  {k:'A',l:'Government-built public housing + rent control', d:'Direct state/city investment; cap rents',                delta:-0.5,tags:['housing','labor']},
+  {k:'B',l:'Strong tenant protections + upzone near transit', d:'Protect renters while allowing more housing density',   delta:-0.2,tags:['housing']},
+  {k:'C',l:'Mixed: build more + targeted protections',       d:'Pragmatic combination of supply and demand-side fixes',  delta:0,  tags:['housing']},
+  {k:'D',l:'Cut regulations, let the market build',          d:'Streamline permitting, reduce environmental review',    delta:0.3, tags:['housing','fiscal']},
+  {k:'E',l:'Property rights first — end zoning constraints', d:'Allow landowners maximum freedom to develop',           delta:0.5, tags:['housing','fiscal']},
+]},
+{id:'climate',q:'On climate and energy policy:',sub:null,opts:[
+  {k:'A',l:'Climate emergency — ban fossil fuels rapidly',   d:'100% renewables mandate, end oil extraction, green jobs', delta:-0.5,tags:['climate']},
+  {k:'B',l:'Aggressive clean energy with strong regulation', d:'Faster transition, carbon pricing, hold polluters accountable',delta:-0.2,tags:['climate']},
+  {k:'C',l:'Balance renewables with reliability and cost',   d:'Support clean energy but keep the grid stable',            delta:0,  tags:['climate']},
+  {k:'D',l:'All-of-the-above including nuclear and gas',     d:'Pragmatic mix: solar, wind, nuclear, and natural gas',    delta:0.2, tags:['climate','fiscal']},
+  {k:'E',l:'Deregulate energy — let the market innovate',    d:'Remove mandates, end subsidies, compete on cost',         delta:0.5, tags:['fiscal']},
+]},
+{id:'safety',q:'On public safety and criminal justice:',sub:null,opts:[
+  {k:'A',l:'Invest in root causes: mental health, poverty, housing',d:'Redirect some law enforcement funding to prevention',delta:-0.5,tags:['publicsafety','labor']},
+  {k:'B',l:'Reform policing + community-based alternatives',        d:'Accountability reforms, add mental health responders',delta:-0.2,tags:['publicsafety','reform']},
+  {k:'C',l:'Balance accountability with effective enforcement',      d:'Fund police but require transparency; evidence-based reforms',delta:0,tags:['publicsafety']},
+  {k:'D',l:'More police, stricter prosecution, reverse Prop 47',    d:'Restore felony thresholds, increase enforcement',    delta:0.3,tags:['publicsafety']},
+  {k:'E',l:'Law and order — reverse all criminal justice reforms',  d:'Maximum enforcement, mandatory minimums, support tough-on-crime DAs',delta:0.5,tags:['publicsafety']},
+]},
+{id:'fiscal',q:"On California's budget and tax policy:",sub:null,opts:[
+  {k:'A',l:'Tax the wealthy more — billionaire and wealth taxes',d:'Expand progressive taxation to fully fund public services',delta:-0.4,tags:['fiscal','labor']},
+  {k:'B',l:'Maintain progressive taxes, protect existing programs',d:'Keep the current structure, plug loopholes, no major cuts',delta:-0.1,tags:['fiscal']},
+  {k:'C',l:'Cut waste but protect core public services',           d:'Audit government spending, eliminate redundancy',       delta:0,  tags:['fiscal']},
+  {k:'D',l:'Significant spending cuts and tax simplification',     d:'Reduce size of government, lower business taxes',       delta:0.3,tags:['fiscal']},
+  {k:'E',l:'Radical government reduction — cut the budget dramatically',d:'50%+ budget cuts, eliminate agencies, privatize services',delta:0.6,tags:['fiscal']},
+]},
+{id:'education',q:'On K-12 and higher education:',sub:null,opts:[
+  {k:'A',l:'Free college + fully funded schools with union power',d:'Tuition-free university, strong teachers unions, equity focus',delta:-0.4,tags:['education','labor']},
+  {k:'B',l:'Strong public schools with increased state funding',  d:'More investment in teachers, reduce class sizes, expand pre-K',delta:-0.1,tags:['education']},
+  {k:'C',l:'Accountability reforms alongside adequate funding',   d:'Fund schools but require measurable performance improvements',delta:0,tags:['education']},
+  {k:'D',l:'School choice, charter expansion, parental rights',   d:'Vouchers for private schools, parental notification, charter growth',delta:0.3,tags:['education']},
+  {k:'E',l:'Privatize education — full school choice',            d:'End the public school monopoly, let families choose any school',delta:0.5,tags:['education']},
+]},
+{id:'healthcare',q:'On healthcare access in California:',sub:null,opts:[
+  {k:'A',l:'Single-payer now — Medicare for All California',    d:'Universal state-run healthcare replacing private insurance',delta:-0.5,tags:['healthcare']},
+  {k:'B',l:'Expand Medi-Cal + universal coverage target',       d:'Cover everyone, strengthen the ACA, regulate insurers',  delta:-0.2,tags:['healthcare']},
+  {k:'C',l:'Fix affordability gaps in the mixed system',        d:'Targeted reforms: drug pricing, surprise billing, coverage gaps',delta:0,tags:['healthcare']},
+  {k:'D',l:'More market competition, fewer mandates',           d:'Let insurers compete across state lines, deregulate requirements',delta:0.3,tags:['healthcare','fiscal']},
+  {k:'E',l:'Government out of healthcare — fully private',      d:'Repeal mandates, block-grant Medi-Cal, private market',  delta:0.5,tags:['healthcare','fiscal']},
+]},
+{id:'immigration',q:'On immigration policy for California:',sub:null,opts:[
+  {k:'A',l:'Sanctuary state, amnesty, resist federal enforcement',d:'Full sanctuary protections, path to citizenship, no ICE cooperation',delta:-0.5,tags:['immigration','labor']},
+  {k:'B',l:'Protect Dreamers, compassionate enforcement',        d:'DACA protections, resist mass deportations, support immigrant families',delta:-0.2,tags:['immigration']},
+  {k:'C',l:'Orderly legal immigration, limited enforcement cooperation',d:'Support legal pathways, case-by-case enforcement',delta:0,tags:['immigration']},
+  {k:'D',l:'Stricter enforcement, end sanctuary policies',       d:'Cooperate with federal enforcement, reduce unauthorized entry',delta:0.3,tags:['immigration']},
+  {k:'E',l:'Secure border first — support large-scale deportations',d:'End sanctuary cities, maximum enforcement',           delta:0.5,tags:['immigration']},
+]},
+{id:'judges',q:'For Superior Court judges, you prefer someone with a background in:',sub:'Applies to the 9 judicial races on your ballot.',opts:[
+  {k:'A',l:'Public defense — protecting rights of the accused',  d:'Ensuring every defendant receives a vigorous, fair defense',jp:'defense'},
+  {k:'B',l:'Slight preference for defense background',           d:'Defense experience valued, but open to exceptional prosecutors',jp:'defense'},
+  {k:'C',l:'No preference — both make great judges',             d:'Evaluate candidates on temperament, qualifications, and character',jp:'neutral'},
+  {k:'D',l:'Slight preference for prosecution experience',       d:'Prosecution background useful, but qualifications matter most',jp:'prosecution'},
+  {k:'E',l:'Prosecution — holding criminals accountable',        d:'Experience protecting victims and enforcing the law',jp:'prosecution'},
+]},
+{id:'incumbents',q:'When an incumbent is running for re-election:',sub:null,opts:[
+  {k:'A',l:'Strong preference for the incumbent',d:"Continuity and experience — if they've done the job, keep them",ib:15},
+  {k:'B',l:'Lean toward incumbent, open to challengers',         d:'Give incumbents credit for experience, but consider alternatives',ib:8},
+  {k:'C',l:'Judge each race purely on the merits',              d:'Incumbent status is neither an advantage nor disadvantage',ib:0},
+  {k:'D',l:'Lean toward a fresh face',                          d:"New perspectives are valuable; incumbents have had their chance",ib:-8},
+  {k:'E',l:'Always prefer a challenger',                        d:'Time limits on power are healthy; prefer new voices',ib:-15},
+]},
+];
+
+/* ── Wizard State ───────────────────────────────────── */
+const WZ={step:0,answers:[],results:null};
+
+/* ── Open / Close ───────────────────────────────────── */
+function wzOpen(){
+  WZ.step=0;WZ.answers=[];WZ.results=null;
+  const bd=document.getElementById('wz-backdrop');
+  bd.style.display='flex';
+  requestAnimationFrame(()=>bd.classList.add('wz-vis'));
+  document.getElementById('wz-ht').textContent='⚡ Ballot Wizard';
+  document.getElementById('wz-pw').style.display='';
+  wzRestoreFoot();wzRenderStep(0);wzUpdProg(0);
+  document.addEventListener('keydown',wzKey);
+}
+function wzClose(){
+  const bd=document.getElementById('wz-backdrop');
+  bd.classList.remove('wz-vis');
+  setTimeout(()=>{bd.style.display='none';},240);
+  document.removeEventListener('keydown',wzKey);
+}
+function wzKey(e){
+  if(e.key==='Escape'){wzClose();return;}
+  const map={a:0,b:1,c:2,d:3,e:4};
+  const idx=map[e.key.toLowerCase()];
+  if(idx!==undefined&&WZ.step<10){wzSelectOpt(WZ.step,idx);}
+}
+
+/* ── Navigation ─────────────────────────────────────── */
+function wzNext(){
+  if(WZ.step>=10)return;
+  if(!WZ.answers[WZ.step]){
+    document.querySelectorAll('.wz-opt').forEach(el=>{
+      el.style.borderColor='#ef4444';
+      setTimeout(()=>el.style.borderColor='',700);
+    });
+    return;
+  }
+  WZ.step++;
+  document.getElementById('wz-card').scrollTop=0;
+  if(WZ.step===10){
+    const profile=wzBuildProfile(WZ.answers);
+    WZ.results=wzComputeResults(profile);
+    wzRenderResults(WZ.results);
+  }else{
+    wzRenderStep(WZ.step);wzUpdProg(WZ.step);
+  }
+}
+function wzPrev(){
+  if(WZ.step===0)return;
+  WZ.step--;
+  document.getElementById('wz-pw').style.display='';
+  document.getElementById('wz-ht').textContent='⚡ Ballot Wizard';
+  wzRestoreFoot();wzRenderStep(WZ.step);wzUpdProg(WZ.step);
+  document.getElementById('wz-card').scrollTop=0;
+}
+function wzRestoreFoot(){
+  document.getElementById('wz-foot').innerHTML=
+    `<button class="btn" id="wz-prev" onclick="wzPrev()">← Back</button>
+     <button class="btn btn-p" id="wz-next" onclick="wzNext()">Next →</button>`;
+}
+
+/* ── Render Question ────────────────────────────────── */
+function wzRenderStep(si){
+  const q=WQ[si];const cur=WZ.answers[si];
+  let h=`<div class="wz-question">${q.q}</div>`;
+  if(q.sub)h+=`<p class="wz-q-sub">${q.sub}</p>`;
+  h+=`<div class="wz-options">`;
+  q.opts.forEach((o,i)=>{
+    const sel=cur&&cur.k===o.k?' wz-sel':'';
+    h+=`<button class="wz-opt${sel}" onclick="wzSelectOpt(${si},${i})" type="button">
+      <span class="wz-opt-key">${o.k}</span>
+      <span class="wz-opt-text"><span class="wz-opt-label">${o.l}</span><span class="wz-opt-desc">${o.d}</span></span>
+    </button>`;
+  });
+  h+=`</div>`;
+  document.getElementById('wz-body').innerHTML=h;
+  const prev=document.getElementById('wz-prev');
+  if(prev)prev.disabled=(si===0);
+}
+
+function wzSelectOpt(si,oi){
+  WZ.answers[si]=WQ[si].opts[oi];
+  document.querySelectorAll('.wz-opt').forEach((el,i)=>el.classList.toggle('wz-sel',i===oi));
+}
+
+function wzUpdProg(step){
+  document.getElementById('wz-pf').style.width=(step/10*100)+'%';
+  document.getElementById('wz-sl').textContent=`Step ${step+1} of 10`;
+}
+
+/* ── Build Profile ──────────────────────────────────── */
+function wzBuildProfile(ans){
+  const q1=ans[0]||WQ[0].opts[2];
+  let ideology=q1.ideology;
+  let delta=0;
+  for(let i=1;i<=7;i++){if(ans[i])delta+=(ans[i].delta||0);}
+  ideology=Math.max(1,Math.min(5,ideology+delta/3.5));
+  const tagSet=new Set();
+  for(let i=1;i<=7;i++){if(ans[i]&&ans[i].tags)ans[i].tags.forEach(t=>tagSet.add(t));}
+  const judgePreference=(ans[8]||{jp:'neutral'}).jp;
+  const incumbentBonus=(ans[9]||{ib:0}).ib;
+  return{ideology,tags:[...tagSet],judgePreference,incumbentBonus};
+}
+
+/* ── Score a Candidate ──────────────────────────────── */
+function wzScoreCand(cand,profile,isJudicial){
+  const s=SCORES[cand.n];
+  if(!s)return 50;
+  if(s.misconduct)return 20; // Draper misconduct cap
+  if(isJudicial){
+    let js;
+    if(profile.judgePreference==='neutral'){js=65;}
+    else if(s.judgeType===profile.judgePreference){js=85;}
+    else if(s.judgeType==='civil'){js=50;}
+    else{js=25;}
+    if(s.tags&&s.tags.includes('reform')&&profile.ideology<2.5)js=Math.min(100,js+10);
+    const ia=s.incumbent?profile.incumbentBonus:0;
+    return Math.max(0,Math.min(100,Math.round(js+ia)));
+  }
+  const ideoDist=Math.abs(s.ideology-profile.ideology);
+  const ideoScore=Math.max(0,100-(ideoDist/4)*100);
+  const ct=s.tags||[];
+  const mc=ct.filter(t=>profile.tags.includes(t)).length;
+  const mp=Math.min(ct.length,profile.tags.length);
+  const tagScore=mp>0?(mc/mp)*100:50;
+  const ia=s.incumbent?profile.incumbentBonus:0;
+  return Math.max(0,Math.min(100,Math.round(ideoScore*0.6+tagScore*0.4+ia)));
+}
+
+/* ── Compute All Results ────────────────────────────── */
+function wzComputeResults(profile){
+  const res={};
+  allRaces().forEach(race=>{
+    const isJ=race.jur==='judicial';
+    if(race.cx.length===1){
+      res[race.id]={top:{candidate:race.cx[0],matchPct:100},ranked:[{candidate:race.cx[0],matchPct:100}],auto:true,office:race.office};
+      return;
+    }
+    const scored=race.cx.map(c=>({candidate:c,matchPct:wzScoreCand(c,profile,isJ)}))
+      .sort((a,b)=>b.matchPct-a.matchPct);
+    res[race.id]={top:scored[0],ranked:scored,auto:false,office:race.office,isGov:race.id==='gov'};
+  });
+  return res;
+}
+
+/* ── Bio excerpt ────────────────────────────────────── */
+function wzExcerpt(bio){
+  if(!bio)return'';
+  const dot=bio.indexOf('.');
+  return dot>10&&dot<180?bio.substring(0,dot+1):bio.substring(0,160)+'…';
+}
+
+/* ── Render Results ─────────────────────────────────── */
+function wzRenderResults(res){
+  document.getElementById('wz-ht').textContent='⚡ Your Ballot Recommendations';
+  document.getElementById('wz-pw').style.display='none';
+
+  let h=`<p class="wz-results-intro">Based on your answers, here are the best-matched candidates across all 22 races. Match % reflects ideology alignment and shared issue priorities. Click <strong>Apply to My Ballot</strong> to fill them all in — you can still change individual races manually afterward.</p>`;
+  h+=`<div class="wz-grid">`;
+
+  allRaces().forEach(race=>{
+    const rec=res[race.id];if(!rec)return;
+    let top=rec.top;
+    // Skip suspended/withdrawn: if top candidate has a flag, use #2
+    let skipNote='';
+    if(top.candidate.flag&&rec.ranked.length>1){
+      skipNote=`<div class="wz-warn">⚠ Top match ${top.candidate.flag.replace('⚠ ','').split('—')[0].trim()} — showing next best</div>`;
+      top=rec.ranked[1];
+    }
+    const cand=top.candidate;
+    const party=P[cand.p]||P['No Party Preference'];
+    const govCls=rec.isGov?' wz-gov':'';
+    const autoCls=rec.auto?' wz-auto':'';
+    const pctBadge=rec.auto?`<span class="wz-rec-note">Uncontested</span>`:`<span class="wz-rec-match">${top.matchPct}% match</span>`;
+
+    let govAlts='';
+    if(rec.isGov&&rec.ranked.length>1){
+      const alt2=rec.ranked[1];const alt3=rec.ranked[2];
+      const skip=top.candidate.flag&&rec.ranked.length>2?rec.ranked[2]:alt2;
+      govAlts=`<div class="wz-gov-alts">Also: ${skip&&skip!==top?skip.candidate.n+' ('+skip.matchPct+'%)':''}${alt3&&alt3!==top?' · '+alt3.candidate.n+' ('+alt3.matchPct+'%)':''}</div>`;
+    }
+
+    h+=`<div class="wz-rec${govCls}${autoCls}">
+      <span class="wz-rec-office">${race.office}</span>
+      <span class="wz-rec-name">${cand.n}</span>
+      <div class="wz-rec-row">
+        <span class="pbadge" style="color:${party.c};background:${party.bg}">${party.s}</span>
+        ${pctBadge}
+      </div>
+      ${skipNote}
+      <span class="wz-rec-bio">${wzExcerpt(cand.bio)}</span>
+      ${govAlts}
+    </div>`;
+  });
+  h+=`</div>`;
+  document.getElementById('wz-body').innerHTML=h;
+  document.getElementById('wz-foot').innerHTML=`
+    <button class="btn" onclick="wzClose()">Review Manually</button>
+    <button class="btn btn-p" onclick="wzApply()">⚡ Apply to My Ballot</button>`;
+}
+
+/* ── Apply ──────────────────────────────────────────── */
+function wzApply(){
+  if(!WZ.results)return;
+  allRaces().forEach(race=>{
+    const rec=WZ.results[race.id];if(!rec)return;
+    let top=rec.top;
+    if(top.candidate.flag&&rec.ranked.length>1)top=rec.ranked[1];
+    if(top&&top.candidate)pick(race.id,top.candidate.n);
+  });
+  wzClose();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
