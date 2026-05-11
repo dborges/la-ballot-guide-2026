@@ -6,28 +6,6 @@ An interactive voter guide for the **Los Angeles County Statewide Direct Primary
 
 ---
 
-## Screenshots
-
-**Main ballot guide — all 22 races with party badges and bio dropdowns**
-![Main view](screenshots/01-main-view.png)
-
-**Click any candidate name to expand their researched biography**
-![Bio dropdown](screenshots/02-bio-dropdown.png)
-
-**Party filter — Republican selected, matching candidates sorted to top**
-![Party filter](screenshots/03-party-filter-republican.png)
-
-**⚡ Ballot Wizard — 10 questions about your values and policy positions**
-![Wizard question](screenshots/04-wizard-question.png)
-
-**Wizard results — best-matched candidate for every race with match %**
-![Wizard results](screenshots/06-wizard-results.png)
-
-**After applying — all 22 races filled in the My Ballot sidebar**
-![Ballot filled](screenshots/07-ballot-filled.png)
-
----
-
 ## What's Inside
 
 **22 races · 164 candidates** across four sections:
@@ -95,6 +73,19 @@ Everything runs client-side in a single HTML file:
 - **Eric Swalwell** — suspended his campaign April 12, 2026 after misconduct allegations; flagged ⚠ on the ballot, and the wizard skips to the next-best match if he scores #1
 - **Betty T. Yee** — withdrew from the Governor's race April 20, 2026; also flagged ⚠
 - **Uncontested races** (Office 39 — Binh Q. Dang; Office 60 — Ann M. Maurer) — auto-selected at 100% match
+
+---
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Main view](screenshots/01-main-view.png) | ![Bio dropdown](screenshots/02-bio-dropdown.png) |
+| **Main ballot guide** — all 22 races with party badges | **Candidate bio** — click any name to expand a researched biography |
+| ![Party filter](screenshots/03-party-filter-republican.png) | ![Wizard question](screenshots/04-wizard-question.png) |
+| **Party filter** — Republican selected, matching candidates sorted to top | **⚡ Ballot Wizard** — 10 questions about your values and policy positions |
+| ![Wizard results](screenshots/06-wizard-results.png) | ![Ballot filled](screenshots/07-ballot-filled.png) |
+| **Wizard results** — best-matched candidate for every race with match % | **Ballot filled** — all 22 races applied to the My Ballot sidebar |
 
 ---
 
