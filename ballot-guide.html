@@ -182,6 +182,17 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .wz-rec-note{font-size:9px;color:#f97316;font-weight:bold}
 .wz-gov-alts{margin-top:4px;font-size:10px;color:var(--dim)}
 .wz-warn{font-size:10px;color:#f97316;margin-top:2px}
+/* ── PRE-PRINT CHECK ─────────────────────────────────── */
+.pc-card{max-width:520px}
+.pc-intro{font-size:11.5px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.pc-intro b{color:var(--accent)}
+.pc-sec{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);font-weight:bold;margin:10px 0 4px}
+.pc-sec:first-child{margin-top:0}
+.pc-item{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:6px 9px;margin-bottom:3px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:inherit;font-size:11px;text-align:left;cursor:pointer;transition:border-color 0.14s}
+.pc-item:hover{border-color:var(--accent)}
+.pc-item span:last-child{flex-shrink:0;font-size:9px;color:var(--dim);letter-spacing:0.06em;text-transform:uppercase}
+.pc-flash{animation:pcFlash 1.6s ease}
+@keyframes pcFlash{0%,60%{border-color:#f97316;box-shadow:0 0 0 2px rgba(249,115,22,0.35)}100%{box-shadow:none}}
 @media(max-width:600px){.wz-grid{grid-template-columns:1fr}.wz-question{font-size:13px}.wz-rec.wz-gov{grid-column:auto}}
 /* ── MEASURES + RETENTION ───────────────────────────── */
 .j-measure{background:rgba(168,85,247,0.15);color:#c084fc}
@@ -225,7 +236,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
       <a class="btn" href="archive/2026-06-primary/" title="June 2, 2026 Primary guide (archived)">📁 June Primary</a>
       <a class="btn" href="https://github.com/dborges/la-ballot-guide-2026" target="_blank" rel="noopener noreferrer">⌥ GitHub ↗</a>
       <button class="btn" onclick="wzOpen()">⚡ Ballot Wizard</button>
-      <button class="btn btn-p" onclick="window.print()">⎙ Print My Ballot</button>
+      <button class="btn btn-p" onclick="printBallot()">⎙ Print My Ballot</button>
     </div>
   </div>
   <div class="prog-row">
@@ -252,7 +263,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
       <div class="sb-empty" id="sb-empty">Pick a candidate or YES / NO on each item.<br>Your choices appear here.</div>
     </div>
     <div class="sb-foot">
-      <button class="btn btn-p" onclick="window.print()" style="width:100%;justify-content:center">⎙ Print My Ballot</button>
+      <button class="btn btn-p" onclick="printBallot()" style="width:100%;justify-content:center">⎙ Print My Ballot</button>
       <button class="btn" onclick="clearAll()" style="width:100%;justify-content:center">✕ Clear All</button>
     </div>
   </aside>
@@ -631,6 +642,49 @@ function updateSB(){
 
 function toggleSB(){document.getElementById('sb').classList.toggle('open');}
 
+/* PRE-PRINT CHECK — list unfilled items before printing; the voter can jump to one or print anyway */
+function printBallot(){
+  const missing=allRaces().filter(r=>!sel[r.id]);
+  if(!missing.length){window.print();return;}
+  const total=totalRaces();
+  document.getElementById('pc-title').textContent=`⚠ ${missing.length} item${missing.length!==1?'s':''} not filled in`;
+  let h=`<p class="pc-intro">You've filled in <b>${total-missing.length} of ${total}</b> items. Blank items won't appear on your printout. It's fine to leave a race blank on the real ballot — the rest of your votes still count. Click an item to jump to it.</p>`;
+  BALLOT.forEach(section=>{
+    const left=section.races.filter(r=>!sel[r.id]);
+    if(!left.length)return;
+    h+=`<div class="pc-sec">${section.section}</div>`;
+    left.forEach(r=>{
+      const label=r.kind==='measure'?`${r.office} — ${r.m.title}`:r.kind==='retain'?`${r.who.n} (retention)`:r.office;
+      const tag=r.kind==='measure'||r.kind==='retain'?'Yes / No':'Candidate';
+      h+=`<button class="pc-item" type="button" onclick="pcJump('${r.id}')"><span>${label}</span><span>${tag}</span></button>`;
+    });
+  });
+  document.getElementById('pc-body').innerHTML=h;
+  const bd=document.getElementById('pc-backdrop');
+  bd.style.display='flex';
+  requestAnimationFrame(()=>bd.classList.add('wz-vis'));
+  document.addEventListener('keydown',pcKey);
+}
+function pcClose(after){
+  const bd=document.getElementById('pc-backdrop');
+  bd.classList.remove('wz-vis');
+  document.removeEventListener('keydown',pcKey);
+  setTimeout(()=>{bd.style.display='none';if(after)after();},240);
+}
+function pcKey(e){if(e.key==='Escape')pcClose();}
+function pcPrintAnyway(){pcClose(()=>window.print());}
+function pcJump(rid){
+  pcClose(()=>{
+    // make sure the card isn't hidden by an active filter
+    const all=document.querySelector('.tab[data-f="All"]');
+    if(filter!=='All'&&all)setFilter(all);
+    document.getElementById('sb').classList.remove('open');
+    const card=document.getElementById('card-'+rid);if(!card)return;
+    card.scrollIntoView({behavior:'smooth',block:'center'});
+    card.classList.remove('pc-flash');void card.offsetWidth;card.classList.add('pc-flash');
+  });
+}
+
 /* MEASURE */
 function measure(){
   const h=document.getElementById('hdr').offsetHeight;
@@ -648,6 +702,21 @@ render();measure();window.addEventListener('resize',measure);
   <a href="https://dborges.github.io/la-ballot-guide-2026/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:none">dborges.github.io/la-ballot-guide-2026 ↗</a>
   &nbsp;·&nbsp; <a href="archive/2026-06-primary/" style="color:var(--muted);text-decoration:none">June 2 Primary guide (archive)</a>
 </footer>
+
+<!-- PRE-PRINT CHECK -->
+<div class="wz-backdrop" id="pc-backdrop" style="display:none" role="dialog" aria-modal="true" aria-label="Unfilled ballot items">
+  <div class="wz-card pc-card">
+    <div class="wz-head">
+      <span class="wz-title" id="pc-title">⚠ Ballot not complete</span>
+      <button class="wz-close" onclick="pcClose()" aria-label="Close">✕</button>
+    </div>
+    <div class="wz-body" id="pc-body"></div>
+    <div class="wz-foot">
+      <button class="btn" onclick="pcClose()">← Go back &amp; finish</button>
+      <button class="btn btn-p" onclick="pcPrintAnyway()">⎙ Print anyway</button>
+    </div>
+  </div>
+</div>
 
 <!-- BALLOT WIZARD OVERLAY -->
 <div class="wz-backdrop" id="wz-backdrop" style="display:none" role="dialog" aria-modal="true" aria-label="Ballot Wizard">

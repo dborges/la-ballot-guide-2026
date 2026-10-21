@@ -41,7 +41,7 @@ Filter by party (Democratic, Republican, Nonpartisan), or show only **Measures**
 A sticky sidebar tracks your selections, grouped by section, with a live progress bar (X of 54 filled). On phones it's a slide-up drawer.
 
 ### ⎙ Print
-The print stylesheet renders only your selections — a cheat sheet to bring to the polling place.
+The print stylesheet renders only your selections — a cheat sheet to bring to the polling place. If anything is still blank (for example, wizard toss-ups), a pre-print check lists the unfilled items so you can jump to them or print anyway.
 
 ---
 
