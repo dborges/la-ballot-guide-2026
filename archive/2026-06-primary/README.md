@@ -1,8 +1,10 @@
-# LA County Primary Ballot Guide — June 2, 2026
+# [Archived] LA County Primary Ballot Guide — June 2, 2026
+
+> This guide is archived. The current guide (November 3, 2026 General Election) is at the [repo root](../../README.md).
 
 An interactive voter guide for the **Los Angeles County Statewide Direct Primary Election, June 2, 2026**. Built as a single self-contained HTML file with no backend, no dependencies, and no build step — just open it in a browser.
 
-🗳️ **Live site:** [dborges.github.io/la-ballot-guide-2026](https://dborges.github.io/la-ballot-guide-2026/)
+🗳️ **Archived site:** [dborges.github.io/la-ballot-guide-2026/archive/2026-06-primary/](https://dborges.github.io/la-ballot-guide-2026/archive/2026-06-primary/)
 
 ---
 
